@@ -72,18 +72,12 @@ function isPanda8(playerCards: Card[], playerTotal: number): boolean {
   return playerCards.length === 3 && playerTotal === 8
 }
 
-interface Shoe2 {
-  shoe: Shoe
-}
-
 function drawCard(shoe: Shoe, faceDown = false): { card: Card; shoe: Shoe } {
   return dealCard(shoe, faceDown)
 }
 
-function makeInitialState(config: BaccaratConfig, existingShoe?: Shoe): BaccaratState {
+function makeInitialState(config: BaccaratConfig): BaccaratState {
   const seed = Math.floor(Math.random() * 0xffffffff)
-  const rng = createRNG(seed)
-  const shoe = existingShoe ?? makeShoe(NUM_DECKS, rng)
   return {
     phase: 'betting',
     variant: config.variant,
@@ -108,7 +102,7 @@ function makeInitialState(config: BaccaratConfig, existingShoe?: Shoe): Baccarat
   }
 }
 
-function reshuffleIfNeeded(shoe: Shoe, config: BaccaratConfig): Shoe {
+function reshuffleIfNeeded(shoe: Shoe, _config: BaccaratConfig): Shoe {
   if (penetration(shoe) >= RESHUFFLE_PENETRATION) {
     const seed = Math.floor(Math.random() * 0xffffffff)
     const rng = createRNG(seed)
@@ -240,7 +234,7 @@ export class BaccaratEngine {
     const seed = Math.floor(Math.random() * 0xffffffff)
     const rng = createRNG(seed)
     this.shoe = makeShoe(NUM_DECKS, rng)
-    this.state = makeInitialState(this.config, this.shoe)
+    this.state = makeInitialState(this.config)
     this.state = { ...this.state, seed }
   }
 
@@ -416,7 +410,7 @@ export class BaccaratEngine {
 
         case 'NEW_HAND': {
           this.shoe = reshuffleIfNeeded(this.shoe, this.config)
-          const newState = makeInitialState(this.config, this.shoe)
+          const newState = makeInitialState(this.config)
           this.state = { ...newState, seed: this.state.seed }
           break
         }

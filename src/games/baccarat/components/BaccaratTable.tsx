@@ -18,7 +18,7 @@ const BET_MAX = 100000
 type BetTarget = 'player' | 'banker' | 'tie'
 
 function BaccaratTableInner() {
-  const { state, placeBet, placeDragonBonus, placePanda8, deal, newHand, validActions, resetEngine } = useBaccarat()
+  const { state, placeBet, placeDragonBonus, placePanda8, deal, newHand, validActions } = useBaccarat()
   const { activeProfile } = useProfileStore()
   const profile = activeProfile()
   const sessionCents = profile?.sessionStakeCents ?? 0

@@ -1,6 +1,5 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { BaccaratEngine } from './engine'
-import type { BaccaratState } from './types'
 import { makeCard } from '../../lib/deck'
 import type { Card } from '../../lib/deck'
 
@@ -22,7 +21,6 @@ function handTotal(cards: Card[]): number {
 // the internal shoe. We read the state, replace the shoe's cards with our own
 // sequence at position 0, and reset dealtCount so our cards come out first.
 function injectCards(engine: BaccaratEngine, sequence: Card[]): void {
-  const state = engine.getState()
   // Access private shoe via the dispatch trick — we cast to any for test setup only.
   const eng = engine as unknown as { shoe: { cards: Card[]; numDecks: number; dealtCount: number } }
   const existing = eng.shoe
@@ -40,15 +38,6 @@ function standardEngine(): BaccaratEngine {
 
 function ezEngine(): BaccaratEngine {
   return new BaccaratEngine({ variant: 'ez', tableLimits: { min: 100, max: 100000 } })
-}
-
-function placeBetAndDeal(
-  engine: BaccaratEngine,
-  bet: 'player' | 'banker' | 'tie' = 'player',
-  amount = 10000
-): ReturnType<BaccaratEngine['dispatch']> {
-  engine.dispatch({ type: 'PLACE_BET', bet, amount })
-  return engine.dispatch({ type: 'DEAL' })
 }
 
 // ---------------------------------------------------------------------------
@@ -451,15 +440,7 @@ describe('BaccaratEngine — Dragon Bonus side bet', () => {
     // Adjusted: Player 6, Banker 2 → diff = 4
     // Player: 3+3=6 stands, Banker: 2+0(K)=2 draws (banker 2 always draws)
     // B3 = K(0) → banker total 2 still. Player 6 - Banker 2 = 4. Win by 4 → pays 1:1
-    const sequence = [
-      makeCard('3', 'hearts'),  // P1=3
-      makeCard('2', 'clubs'),   // B1=2
-      makeCard('3', 'diamonds'),// P2=3  → player 6 (stands)
-      makeCard('K', 'spades'),  // B2=0  → banker 2 (draws; always draws on 0-2 when player stood)
-      makeCard('K', 'hearts'),  // would be P3 if player drew — player doesn't draw
-      makeCard('K', 'clubs'),   // B3=0  → banker total 2
-    ]
-    // Wait: player stands (6). Banker total 2, player stood → banker draws (<=5 when player stood)
+    // Player stands (6). Banker total 2, player stood → banker draws (<=5 when player stood)
     // Banker draws B3. But where is B3 in sequence? When player STANDS, deal order is P1,B1,P2,B2,B3.
     // So correct sequence: P1, B1, P2, B2, B3
     const seq2 = [
