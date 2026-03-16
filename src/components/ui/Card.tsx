@@ -28,7 +28,6 @@ export function Card({ card, faceDown, className = '' }: Props) {
             backgroundColor: 'var(--card-face)',
             border: '1px solid var(--card-border)',
             boxShadow: 'var(--shadow-card)',
-            position: 'relative',
             padding: '4px 6px',
           }}
         >
