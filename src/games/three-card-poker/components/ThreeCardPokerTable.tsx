@@ -126,16 +126,26 @@ function ThreeCardPokerTableInner() {
     <div
       className="felt-texture"
       style={{
-        minHeight: 'calc(100vh - var(--nav-height))',
+        height: '100%',
         backgroundColor: 'var(--felt-blackjack)',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        padding: '32px 24px 140px',
-        gap: 24,
+        overflow: 'hidden',
         position: 'relative',
       }}
     >
+      <div
+        style={{
+          flex: 1,
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '32px 24px 24px',
+          gap: 24,
+          position: 'relative',
+        }}
+      >
       <div
         className="font-display"
         style={{ color: 'var(--felt-print-strong)', fontSize: 28, fontWeight: 700, letterSpacing: '0.06em', opacity: 0.6 }}
@@ -261,13 +271,11 @@ function ThreeCardPokerTableInner() {
         onNewHand={newHand}
         canDeal={canDeal}
       />
+      </div>
 
       <div
         style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
+          flexShrink: 0,
           display: 'flex',
           gap: 16,
           justifyContent: 'center',

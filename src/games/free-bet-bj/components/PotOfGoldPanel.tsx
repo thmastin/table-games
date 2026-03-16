@@ -65,7 +65,13 @@ export function PotOfGoldPanel({ state, dispatch, selectedAmount, onAmountChange
 
       <div
         className="font-sans"
-        style={{ color: 'var(--text-dim)', fontSize: 10, marginBottom: 10, lineHeight: 1.4 }}
+        style={{ color: 'var(--gold-muted)', fontSize: 10, fontWeight: 600, marginBottom: 4 }}
+      >
+        Jackpot on suited free-split Aces
+      </div>
+      <div
+        className="font-sans"
+        style={{ color: 'var(--text-dim)', fontSize: 9, marginBottom: 10, lineHeight: 1.4 }}
       >
         Trigger: split Aces of the same suit after a free split
       </div>

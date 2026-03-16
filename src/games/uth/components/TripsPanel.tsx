@@ -81,6 +81,12 @@ export function TripsPanel({ state, onTripsClick }: Props) {
         onClick={canBet ? onTripsClick : undefined}
         size={72}
       />
+      <span
+        className="font-sans"
+        style={{ color: 'var(--gold-muted)', fontSize: 9, fontWeight: 600 }}
+      >
+        Royal 50:1
+      </span>
 
       {state.phase === 'complete' && state.tripsResult && (
         <div style={{ textAlign: 'center' }}>
@@ -101,10 +107,19 @@ export function TripsPanel({ state, onTripsClick }: Props) {
 
       {state.phase === 'complete' && state.trips > 0 && !state.tripsResult && (
         <div
-          className="font-sans"
-          style={{ color: 'var(--result-loss)', fontSize: 12, fontWeight: 600 }}
+          style={{
+            textAlign: 'center',
+            padding: '4px 8px',
+            borderRadius: 4,
+            backgroundColor: 'rgba(192,57,43,0.1)',
+          }}
         >
-          No Trips Win
+          <div
+            className="font-mono"
+            style={{ color: 'var(--result-loss)', fontSize: 11, fontWeight: 700 }}
+          >
+            LOSE -{formatCents(state.trips)}
+          </div>
         </div>
       )}
 

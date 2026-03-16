@@ -267,16 +267,26 @@ function FreeBetBJTableInner() {
     <div
       className="felt-texture"
       style={{
-        minHeight: 'calc(100vh - var(--nav-height))',
+        height: '100%',
         backgroundColor: 'var(--felt-free-bet)',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        padding: '32px 24px',
-        gap: 24,
+        overflow: 'hidden',
         position: 'relative',
       }}
     >
+      <div
+        style={{
+          flex: 1,
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '32px 24px 24px',
+          gap: 24,
+          position: 'relative',
+        }}
+      >
       <div
         className="font-display"
         style={{
@@ -384,13 +394,11 @@ function FreeBetBJTableInner() {
       )}
 
       <FreeBetBJControls state={state} dispatch={dispatch} />
+      </div>
 
       <div
         style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
+          flexShrink: 0,
           display: 'flex',
           gap: 16,
           justifyContent: 'center',

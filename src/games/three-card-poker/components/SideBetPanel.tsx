@@ -81,7 +81,7 @@ export function SideBetPanel({
       </div>
 
       <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
           <BetSpot
             label="PAIR+"
             amountCents={state.pairPlus}
@@ -95,6 +95,12 @@ export function SideBetPanel({
           >
             Pair Plus
           </span>
+          <span
+            className="font-sans"
+            style={{ color: 'var(--gold-muted)', fontSize: 9, fontWeight: 600, textAlign: 'center' }}
+          >
+            SF 40:1
+          </span>
           {isComplete && pairPlusResult !== null && state.pairPlus > 0 && (
             <NetResult
               net={pairPlusResult}
@@ -102,9 +108,12 @@ export function SideBetPanel({
               payoutLabel={state.result?.rank ? (PAIR_PLUS_PAYOUTS[state.result.rank] ?? null) : null}
             />
           )}
+          {isComplete && state.pairPlus > 0 && pairPlusResult === null && (
+            <span className="font-sans" style={{ color: 'var(--result-loss)', fontSize: 10, fontWeight: 700 }}>No Win</span>
+          )}
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
           <BetSpot
             label="6CB"
             amountCents={state.sixCardBonus}
@@ -118,12 +127,21 @@ export function SideBetPanel({
           >
             6-Card Bonus
           </span>
+          <span
+            className="font-sans"
+            style={{ color: 'var(--gold-muted)', fontSize: 9, fontWeight: 600, textAlign: 'center' }}
+          >
+            Royal 1000:1
+          </span>
           {isComplete && sixCardResult !== null && state.sixCardBonus > 0 && (
             <NetResult
               net={sixCardResult}
               rankLabel={sixCardRank ? (HAND_RANK_LABELS[sixCardRank] ?? null) : null}
               payoutLabel={sixCardRank ? (SIX_CARD_PAYOUTS[sixCardRank] ?? null) : null}
             />
+          )}
+          {isComplete && state.sixCardBonus > 0 && sixCardResult === null && (
+            <span className="font-sans" style={{ color: 'var(--result-loss)', fontSize: 10, fontWeight: 700 }}>No Win</span>
           )}
         </div>
       </div>

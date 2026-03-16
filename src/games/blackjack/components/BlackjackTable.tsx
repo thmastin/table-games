@@ -18,6 +18,7 @@ function BlackjackTableInner() {
   const { activeProfile } = useProfileStore()
   const profile = activeProfile()
   const [activeDenom, setActiveDenom] = useState<Denomination>(25)
+  const [sideBetAmount, setSideBetAmount] = useState(100)
 
   const sessionCents = profile?.sessionStakeCents ?? 0
 
@@ -69,16 +70,26 @@ function BlackjackTableInner() {
     <div
       className="felt-texture"
       style={{
-        minHeight: 'calc(100vh - var(--nav-height))',
+        height: '100%',
         backgroundColor: 'var(--felt-blackjack)',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        padding: '32px 24px',
-        gap: 24,
+        overflow: 'hidden',
         position: 'relative',
       }}
     >
+      <div
+        style={{
+          flex: 1,
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '32px 24px',
+          gap: 24,
+          position: 'relative',
+        }}
+      >
       <div
         className="font-display"
         style={{ color: 'var(--felt-print-strong)', fontSize: 28, fontWeight: 700, letterSpacing: '0.06em', opacity: 0.6 }}
@@ -159,13 +170,11 @@ function BlackjackTableInner() {
       )}
 
       <BlackjackControls state={state} dispatch={dispatch} />
+      </div>
 
       <div
         style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
+          flexShrink: 0,
           display: 'flex',
           gap: 16,
           justifyContent: 'center',
@@ -181,7 +190,12 @@ function BlackjackTableInner() {
           activeDenomination={activeDenom}
           sessionStakeCents={sessionCents}
         />
-        <SideBetPanel state={state} dispatch={dispatch} />
+        <SideBetPanel
+          state={state}
+          dispatch={dispatch}
+          selectedAmount={sideBetAmount}
+          onAmountChange={setSideBetAmount}
+        />
       </div>
     </div>
   )
