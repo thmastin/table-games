@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { FreeBetBJEngine } from './engine'
 import { makeCard } from '../../lib/deck'
 import type { FreeBetBJState, FreeBetHand } from './types'

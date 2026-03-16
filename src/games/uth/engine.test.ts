@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { UTHEngine } from './engine'
 import type { UTHState } from './types'
 import type { Card } from '../../lib/deck'
@@ -231,7 +231,6 @@ describe('UTHEngine', () => {
       engine.dispatch({ type: 'PLACE_ANTE', amount: 1000 })
       engine.dispatch({ type: 'DEAL' })
 
-      const preState = engine.getState()
       engine.injectPostDeal(
         [c('A', 'spades'), c('K', 'spades')],
         [c('2', 'hearts'), c('3', 'diamonds')],
@@ -504,7 +503,7 @@ describe('UTHEngine', () => {
       engine.dispatch({ type: 'PLACE_ANTE', amount: 1000 })
       engine.dispatch({ type: 'DEAL' })
       engine.dispatch({ type: 'BET', multiplier: 4 })
-      const { events } = engine.dispatch({ type: 'NEW_HAND' })
+      engine.dispatch({ type: 'NEW_HAND' })
       const completionEvents = engine.getState().events
       expect(completionEvents.some(e => e.type === 'TRIPS_RESOLVED')).toBe(false)
     })

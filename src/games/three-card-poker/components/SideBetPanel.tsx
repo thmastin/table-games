@@ -3,7 +3,6 @@ import { formatCents } from '../../../lib/chips'
 import { evaluate } from '../../../lib/handEvaluator'
 import type { ThreeCardPokerState } from '../types'
 import type { Denomination } from '../../../lib/chips'
-import type { Card } from '../../../lib/deck'
 
 const HAND_RANK_LABELS: Record<string, string> = {
   'high-card':       'High Card',

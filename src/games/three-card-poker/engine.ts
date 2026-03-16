@@ -1,7 +1,6 @@
 import { createRNG } from '../../lib/rng'
 import { makeShoe, dealCard } from '../../lib/deck'
 import { evaluate, compareResults } from '../../lib/handEvaluator'
-import { payout } from '../../lib/chips'
 import {
   pairPlusPayout,
   anteBonusPayout,
@@ -15,7 +14,6 @@ import type {
   SideBetResults,
 } from './types'
 import type { Card, Shoe } from '../../lib/deck'
-import type { HandResult } from '../../lib/handEvaluator'
 
 const DEFAULT_CONFIG: ThreeCardPokerConfig = {
   tableLimits: {
@@ -207,22 +205,14 @@ export class ThreeCardPokerEngine {
 
         const comparison = compareResults(playerResult, dealerResult)
 
-        let antePayout = 0
-        let playReturn = 0
-
         if (!qualifies) {
-          antePayout = payout(s.ante, 1, 1)
-          playReturn = playBet
+          // ante pays 1:1, play returns — hook derives net
         } else if (comparison > 0) {
-          antePayout = payout(s.ante, 1, 1)
-          const playWin = payout(playBet, 1, 1)
-          playReturn = playBet + playWin
+          // ante + play both pay 1:1 — hook derives net
         } else if (comparison === 0) {
-          antePayout = s.ante
-          playReturn = playBet
+          // both push — hook derives net
         } else {
-          antePayout = 0
-          playReturn = 0
+          // both lose — hook derives net
         }
 
         const anteBonusAmount = anteBonusPayout(s.ante, playerResult.rank)

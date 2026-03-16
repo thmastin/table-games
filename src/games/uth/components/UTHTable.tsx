@@ -53,8 +53,6 @@ function UTHTableInner() {
     bet1x,
     fold,
     newHand,
-    validActions,
-    resetEngine,
   } = useUTH()
   const { activeProfile } = useProfileStore()
   const profile = activeProfile()
@@ -98,7 +96,7 @@ function UTHTableInner() {
       const rankLabel = state.playerHandRank
         ? (HAND_RANK_LABELS[state.playerHandRank] ?? state.playerHandRank)
         : ''
-      const blindLabel = blindResultLabel(state.blindResult, state.playerHandRank)
+      blindResultLabel(state.blindResult, state.playerHandRank)
       const tripsNet = state.tripsResult ? state.tripsResult.payout : (state.trips > 0 ? -state.trips : 0)
       let net = state.ante + state.play
       if (state.blindResult === 'win') net += state.blind
@@ -366,7 +364,6 @@ function UTHTableInner() {
 
       <UTHControls
         state={state}
-        validActions={validActions}
         onDeal={deal}
         onBet={bet}
         onCheck={check}
@@ -399,7 +396,6 @@ function UTHTableInner() {
         />
         <TripsPanel
           state={state}
-          activeDenomination={activeDenom}
           onTripsClick={handleTripsClick}
         />
       </div>

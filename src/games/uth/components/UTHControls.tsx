@@ -1,11 +1,9 @@
 import { ActionButton } from '../../../components/ui/ActionButton'
 import { formatCents } from '../../../lib/chips'
 import type { UTHState } from '../types'
-import type { ValidAction } from './useUTH'
 
 type Props = {
   state: UTHState
-  validActions: Set<ValidAction>
   onDeal: () => void
   onBet: (multiplier: 3 | 4) => void
   onCheck: () => void
@@ -17,7 +15,6 @@ type Props = {
 
 export function UTHControls({
   state,
-  validActions,
   onDeal,
   onBet,
   onCheck,

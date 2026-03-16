@@ -51,7 +51,7 @@ function qualifies(result: HandResult): boolean {
   return result.value >= 2
 }
 
-function makeInitialState(config: UTHConfig, seed: number): UTHState {
+function makeInitialState(_config: UTHConfig, seed: number): UTHState {
   return {
     phase: 'idle',
     playerHole: [],

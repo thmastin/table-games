@@ -51,11 +51,6 @@ function deriveNetCents(state: UTHState): number {
 
   if (state.result === 'win') {
     net += state.ante + state.play
-    const blindNet = state.blindResult === 'win'
-      ? (state.tripsResult?.payout ?? 0) > 0
-        ? state.blind
-        : state.blind
-      : 0
     if (state.blindResult === 'win') {
       net += state.blind
     } else if (state.blindResult === 'push') {

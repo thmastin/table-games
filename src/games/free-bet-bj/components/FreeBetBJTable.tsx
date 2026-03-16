@@ -203,7 +203,7 @@ function Push22Banner() {
 }
 
 function FreeBetBJTableInner() {
-  const { state, dispatch, resetEngine } = useFreeBetBJ()
+  const { state, dispatch } = useFreeBetBJ()
   const { activeProfile } = useProfileStore()
   const profile = activeProfile()
   const [activeDenom, setActiveDenom] = useState<Denomination>(25)

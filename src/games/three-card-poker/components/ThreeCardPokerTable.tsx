@@ -23,7 +23,7 @@ const HAND_RANK_LABELS: Record<string, string> = {
 }
 
 function ThreeCardPokerTableInner() {
-  const { state, placeBet, deal, play, fold, newHand, resetEngine } = useThreeCardPoker()
+  const { state, placeBet, deal, play, fold, newHand } = useThreeCardPoker()
   const { activeProfile } = useProfileStore()
   const profile = activeProfile()
   const [activeDenom, setActiveDenom] = useState<Denomination>(25)

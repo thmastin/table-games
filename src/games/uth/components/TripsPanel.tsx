@@ -2,11 +2,9 @@ import { BetSpot } from '../../../components/ui/BetSpot'
 import { formatCents } from '../../../lib/chips'
 import { useJackpotStore } from '../../../store/jackpotStore'
 import type { UTHState } from '../types'
-import type { Denomination } from '../../../lib/chips'
 
 type Props = {
   state: UTHState
-  activeDenomination: Denomination
   onTripsClick: () => void
 }
 
@@ -33,7 +31,7 @@ const HAND_RANK_LABELS: Record<string, string> = {
   'high-card':       'High Card',
 }
 
-export function TripsPanel({ state, activeDenomination, onTripsClick }: Props) {
+export function TripsPanel({ state, onTripsClick }: Props) {
   const jackpotCents = useJackpotStore(s => s.jackpots['uth-progressive'])
   const canBet = state.phase === 'idle' || state.phase === 'betting'
 
