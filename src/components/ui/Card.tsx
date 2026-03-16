@@ -20,7 +20,7 @@ export function Card({ card, faceDown, className = '' }: Props) {
 
   return (
     <div className={`card-flip-container ${className}`} style={{ width: 'var(--card-width)', height: 'var(--card-height)' }}>
-      <div className={`card-flip-inner ${!isDown ? 'flipped' : ''}`}>
+      <div className={`card-flip-inner ${isDown ? 'flipped' : ''}`}>
         <div className="card-back-face card-back-pattern" />
         <div
           className="card-face"
