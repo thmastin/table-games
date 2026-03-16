@@ -9,6 +9,7 @@ import { BlackjackTable } from './games/blackjack/components/BlackjackTable'
 import { ThreeCardPokerTable } from './games/three-card-poker/components/ThreeCardPokerTable'
 import { UTHTable } from './games/uth/components/UTHTable'
 import { FreeBetBJTable } from './games/free-bet-bj/components/FreeBetBJTable'
+import { BaccaratTable } from './games/baccarat/components/BaccaratTable'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/three-card-poker" element={<ThreeCardPokerTable />} />
           <Route path="/uth" element={<UTHTable />} />
           <Route path="/free-bet-bj" element={<FreeBetBJTable />} />
+          <Route path="/baccarat" element={<BaccaratTable />} />
         </Routes>
       </AppShell>
     </BrowserRouter>

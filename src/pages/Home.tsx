@@ -15,7 +15,7 @@ const GAMES: GameCard[] = [
   { id: 'three-card-poker', name: 'Three Card Poker', phase: 1, felt: 'var(--felt-blackjack)', description: 'Ante/Play · Pair Plus · 6-Card Bonus', path: '/three-card-poker', available: true },
   { id: 'ultimate-texas-holdem', name: 'Ultimate Texas Hold\'Em', phase: 1, felt: 'var(--felt-uth)', description: 'Ante/Play/Blind · Trips · Progressive', path: '/uth', available: true },
   { id: 'free-bet-blackjack', name: 'Free Bet Blackjack', phase: 1, felt: 'var(--felt-free-bet)', description: 'Free Doubles & Splits · Push 22', path: '/free-bet-bj', available: true },
-  { id: 'baccarat', name: 'Baccarat', phase: 2, felt: 'var(--felt-baccarat)', description: 'Standard & EZ · Dragon Bonus · Panda 8', path: '/baccarat', available: false },
+  { id: 'baccarat', name: 'Baccarat', phase: 2, felt: 'var(--felt-baccarat)', description: 'Standard & EZ · Dragon Bonus · Panda 8', path: '/baccarat', available: true },
   { id: 'mississippi-stud', name: 'Mississippi Stud', phase: 2, felt: 'var(--felt-mississippi)', description: '3-Card Bonus Side Bet', path: '/mississippi-stud', available: false },
   { id: 'let-it-ride', name: 'Let It Ride', phase: 2, felt: 'var(--felt-let-it-ride)', description: '$1 Tournament Bonus', path: '/let-it-ride', available: false },
   { id: 'roulette', name: 'Roulette', phase: 2, felt: 'var(--felt-roulette)', description: 'American & European · La Partage', path: '/roulette', available: false },
