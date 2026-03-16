@@ -57,7 +57,7 @@ export function FreeBetBJControls({ state, dispatch }: Props) {
           onClick={() => dispatch({ type: 'STAND' })}
         />
 
-        {canFreeDouble && (
+        {canAnyDouble && canFreeDouble && (
           <ActionButton
             label="Free Double"
             variant="primary"
@@ -65,7 +65,7 @@ export function FreeBetBJControls({ state, dispatch }: Props) {
           />
         )}
 
-        {canPaidDouble && !canFreeDouble && (
+        {canAnyDouble && !canFreeDouble && (
           <ActionButton
             label={`Double (${formatCents(activeHand.bet)})`}
             variant="secondary"

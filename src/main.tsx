@@ -8,6 +8,7 @@ import { ProfilePage } from './pages/ProfilePage'
 import { BlackjackTable } from './games/blackjack/components/BlackjackTable'
 import { ThreeCardPokerTable } from './games/three-card-poker/components/ThreeCardPokerTable'
 import { UTHTable } from './games/uth/components/UTHTable'
+import { FreeBetBJTable } from './games/free-bet-bj/components/FreeBetBJTable'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -19,6 +20,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/blackjack" element={<BlackjackTable />} />
           <Route path="/three-card-poker" element={<ThreeCardPokerTable />} />
           <Route path="/uth" element={<UTHTable />} />
+          <Route path="/free-bet-bj" element={<FreeBetBJTable />} />
         </Routes>
       </AppShell>
     </BrowserRouter>

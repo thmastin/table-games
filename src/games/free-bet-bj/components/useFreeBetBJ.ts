@@ -11,7 +11,7 @@ export function useFreeBetBJ() {
 
   const { activeProfile, subtractFromBankroll, addToBankroll } = useProfileStore()
   const { recordHandResult } = useStatsStore()
-  const { getJackpot, resetJackpot, addToBankroll: addToJackpot } = useJackpotStore()
+  const { getJackpot, resetJackpot } = useJackpotStore()
 
   const dispatch = useCallback((command: FreeBetBJCommand): DispatchResult => {
     const profile = activeProfile()
@@ -69,7 +69,7 @@ export function useFreeBetBJ() {
     }
 
     return result
-  }, [activeProfile, subtractFromBankroll, addToBankroll, recordHandResult, getJackpot, resetJackpot, addToJackpot])
+  }, [activeProfile, subtractFromBankroll, addToBankroll, recordHandResult, getJackpot, resetJackpot])
 
   const resetEngine = useCallback(() => {
     engineRef.current = new FreeBetBJEngine()
