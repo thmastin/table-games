@@ -5,6 +5,8 @@ import './index.css'
 import { AppShell } from './components/layout/AppShell'
 import { Home } from './pages/Home'
 import { ProfilePage } from './pages/ProfilePage'
+import { BlackjackTable } from './games/blackjack/components/BlackjackTable'
+import { ThreeCardPokerTable } from './games/three-card-poker/components/ThreeCardPokerTable'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -13,6 +15,8 @@ createRoot(document.getElementById('root')!).render(
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/blackjack" element={<BlackjackTable />} />
+          <Route path="/three-card-poker" element={<ThreeCardPokerTable />} />
         </Routes>
       </AppShell>
     </BrowserRouter>
