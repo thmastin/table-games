@@ -1,0 +1,217 @@
+/*
+  Casino Table Games Suite — Design Tokens
+  All design decisions live here. Reference these variables throughout the application.
+  Import this file once in main.tsx or index.css before Tailwind base.
+*/
+
+:root {
+
+  /* ============================================================
+     FELT COLORS
+     The primary table surface. Each game uses the default green,
+     but the per-game variants allow visual differentiation.
+  ============================================================ */
+
+  /* Default casino green — Vegas-standard */
+  --felt-base:          #1a4731;
+  --felt-mid:           #1e5438;
+  --felt-highlight:     #235f40;
+  --felt-shadow:        #112e20;
+
+  /* Per-game felt variants (optional, each still reads as "casino") */
+  --felt-blackjack:     #1a4731;  /* classic green */
+  --felt-free-bet:      #1a3f45;  /* teal-shifted green — visually distinct from BJ */
+  --felt-uth:           #2a3d1a;  /* yellow-green, poker room feel */
+  --felt-three-card:    #1a4731;  /* same as BJ — same game family */
+  --felt-baccarat:      #1e2d4a;  /* deep blue-green — baccarat is upscale */
+  --felt-mississippi:   #1a4731;  /* standard */
+  --felt-let-it-ride:   #1a4731;  /* standard */
+  --felt-roulette:      #1a3a1a;  /* slightly darker, roulette is dramatic */
+  --felt-craps:         #1a4731;  /* standard */
+
+  /* Felt print colors — lines, labels printed on the felt */
+  --felt-print:         rgba(255, 255, 255, 0.18);
+  --felt-print-strong:  rgba(255, 255, 255, 0.32);
+  --felt-print-dim:     rgba(255, 255, 255, 0.09);
+
+  /* ============================================================
+     CARD COLORS
+  ============================================================ */
+
+  --card-face:          #faf8f2;  /* warm white — not pure white, feels physical */
+  --card-back:          #1a2d6b;  /* deep navy — classic Bee/Bicycle back color */
+  --card-back-pattern:  #162460;  /* slightly darker for back pattern contrast */
+  --card-border:        #d4c9a8;  /* warm gold-tan border */
+  --card-shadow:        rgba(0, 0, 0, 0.45);
+
+  /* Suit colors */
+  --suit-red:           #c41e3a;  /* traditional red — not pure red, has depth */
+  --suit-black:         #1a1a1a;  /* near-black */
+
+  /* Card sizing (used in CSS, also exported to tailwind via plugin) */
+  --card-width:         80px;
+  --card-height:        112px;
+  --card-radius:        6px;
+
+  /* ============================================================
+     CHIP COLORS — standard casino denomination palette
+     Each chip: a base color, a lighter edge/rim, and a darker center band.
+     Text is always white or near-white for contrast.
+  ============================================================ */
+
+  /* $1 — white chip */
+  --chip-1-base:        #e8e4dc;
+  --chip-1-rim:         #f5f2ec;
+  --chip-1-band:        #c8c4bc;
+  --chip-1-text:        #2a2a2a;
+
+  /* $5 — red chip */
+  --chip-5-base:        #c0392b;
+  --chip-5-rim:         #e74c3c;
+  --chip-5-band:        #922b21;
+  --chip-5-text:        #ffffff;
+
+  /* $25 — green chip */
+  --chip-25-base:       #1e8449;
+  --chip-25-rim:        #27ae60;
+  --chip-25-band:       #145a32;
+  --chip-25-text:       #ffffff;
+
+  /* $100 — black chip */
+  --chip-100-base:      #1a1a2e;
+  --chip-100-rim:       #2d2d48;
+  --chip-100-band:      #0d0d1a;
+  --chip-100-text:      #e8c97a;  /* gold text on black chip */
+
+  /* $500 — purple chip */
+  --chip-500-base:      #6c3483;
+  --chip-500-rim:       #8e44ad;
+  --chip-500-band:      #4a235a;
+  --chip-500-text:      #ffffff;
+
+  /* $1000 — yellow/gold chip */
+  --chip-1000-base:     #b8860b;
+  --chip-1000-rim:      #d4a017;
+  --chip-1000-band:     #8b6508;
+  --chip-1000-text:     #1a1a1a;
+
+  /* Chip geometry */
+  --chip-diameter-lg:   64px;   /* tray display */
+  --chip-diameter-md:   52px;   /* table bet spots */
+  --chip-diameter-sm:   40px;   /* stacked/secondary display */
+
+  /* ============================================================
+     UI CHROME — navigation, panels, overlays
+  ============================================================ */
+
+  /* Dark wood / leather frame — surrounds the felt */
+  --chrome-bg:          #0e1117;
+  --chrome-panel:       #141820;
+  --chrome-border:      #2a2f3a;
+  --chrome-border-dim:  #1e2330;
+
+  /* Mahogany rail — the physical table rail above felt */
+  --rail-bg:            #2c1810;
+  --rail-highlight:     #3d2215;
+  --rail-shadow:        #1a0e08;
+
+  /* ============================================================
+     GOLD / ACCENT — premium feel, highlights, wins
+  ============================================================ */
+
+  --gold-bright:        #d4a017;
+  --gold-mid:           #b8860b;
+  --gold-muted:         #8b6914;
+  --gold-pale:          #e8c97a;
+  --gold-text:          #f0d080;
+
+  /* ============================================================
+     RESULT COLORS — outcome banners and indicators
+  ============================================================ */
+
+  --result-win:         #27ae60;
+  --result-win-bg:      rgba(39, 174, 96, 0.15);
+  --result-win-border:  rgba(39, 174, 96, 0.5);
+  --result-win-glow:    0 0 20px rgba(39, 174, 96, 0.4);
+
+  --result-push:        #d4a017;
+  --result-push-bg:     rgba(212, 160, 23, 0.12);
+  --result-push-border: rgba(212, 160, 23, 0.45);
+  --result-push-glow:   0 0 20px rgba(212, 160, 23, 0.35);
+
+  --result-loss:        #c0392b;
+  --result-loss-bg:     rgba(192, 57, 43, 0.12);
+  --result-loss-border: rgba(192, 57, 43, 0.45);
+  --result-loss-glow:   0 0 16px rgba(192, 57, 43, 0.3);
+
+  --result-blackjack:   #d4a017;     /* BJ pays 3:2 — gold, not just green */
+  --result-blackjack-bg: rgba(212, 160, 23, 0.18);
+
+  /* ============================================================
+     TYPOGRAPHY COLORS
+  ============================================================ */
+
+  --text-primary:       #f0ece0;   /* warm white — not harsh pure white */
+  --text-secondary:     #a89e88;   /* muted warm gray */
+  --text-dim:           #6b6456;   /* very muted */
+  --text-inverse:       #1a1a1a;   /* for use on light backgrounds */
+  --text-gold:          #e8c97a;   /* gold accent text */
+  --text-danger:        #e74c3c;
+  --text-success:       #2ecc71;
+
+  /* ============================================================
+     INTERACTIVE STATES
+  ============================================================ */
+
+  --focus-ring:         rgba(212, 160, 23, 0.6);   /* gold focus ring */
+  --hover-overlay:      rgba(255, 255, 255, 0.06);
+  --active-overlay:     rgba(255, 255, 255, 0.1);
+  --disabled-opacity:   0.38;
+
+  /* ============================================================
+     SHADOWS & ELEVATION
+  ============================================================ */
+
+  --shadow-card:        0 4px 12px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-chip:        0 3px 8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+  --shadow-panel:       0 8px 32px rgba(0, 0, 0, 0.6);
+  --shadow-button:      0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-bet-spot:    inset 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow-inset-felt:  inset 0 2px 8px rgba(0, 0, 0, 0.3);
+
+  /* ============================================================
+     TRANSITIONS
+  ============================================================ */
+
+  --transition-fast:    120ms ease;
+  --transition-normal:  220ms ease;
+  --transition-slow:    380ms ease;
+  --transition-deal:    300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-flip:    500ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-result:  250ms cubic-bezier(0.34, 1.56, 0.64, 1);  /* slight spring for result banner */
+
+  /* ============================================================
+     SPACING
+  ============================================================ */
+
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ============================================================
+     LAYOUT
+  ============================================================ */
+
+  --nav-height:         56px;
+  --sidebar-width:      280px;
+  --chip-tray-height:   88px;
+  --action-bar-height:  96px;
+  --min-table-width:    1280px;
+}

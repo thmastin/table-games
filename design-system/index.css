@@ -1,0 +1,378 @@
+/*
+  Casino Table Games Suite — Global Styles
+  Import order in main.tsx:
+    1. This file (index.css)
+    2. Tailwind directives (or this file contains them below)
+
+  This file handles:
+    - Google Fonts import
+    - CSS variable tokens (imports tokens.css)
+    - Tailwind directives
+    - Base resets specific to casino UI
+    - Global utility overrides
+*/
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Playfair+Display:wght@700;800&display=swap');
+
+/* Design tokens */
+@import './tokens.css';
+
+/* Tailwind v4 */
+@import "tailwindcss";
+@config "./tailwind.config.ts";
+
+/* ============================================================
+   BASE RESETS
+============================================================ */
+
+@layer base {
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--chrome-bg);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, sans-serif;
+    /* Prevent text selection during gameplay */
+    user-select: none;
+    /* Hide scrollbar for game tables — lobby scrolls normally */
+    overflow: hidden;
+  }
+
+  /* Lobby re-enables scroll */
+  body.lobby {
+    overflow: auto;
+  }
+
+  /* Remove default focus styles — we apply gold focus ring via Tailwind */
+  :focus {
+    outline: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  /* Prevent number input spinners */
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Prevent double-tap zoom on mobile (not primary target but good hygiene) */
+  button, a {
+    touch-action: manipulation;
+  }
+
+  /* Smooth card/chip animations respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ============================================================
+   COMPONENT LAYER — base styles for reused patterns
+   (These extend Tailwind utilities from tailwind.config.ts)
+============================================================ */
+
+@layer components {
+
+  /* ---- FELT SURFACE ---- */
+
+  /*
+   * The main table surface. Apply to the felt div, then set background-color
+   * via inline style to use the per-game variant (CSS variable override).
+   * The texture is handled by the .felt-texture utility in tailwind.config.ts.
+   */
+  .table-surface {
+    @apply felt-texture;
+    min-height: calc(100vh - var(--nav-height) - var(--chip-tray-height) - var(--action-bar-height));
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Rail — the wood border above and below the felt */
+  .table-rail {
+    @apply rail-texture;
+    height: 18px;
+  }
+
+  /* ---- NAV BAR ---- */
+
+  .site-nav {
+    height: var(--nav-height);
+    background-color: var(--chrome-bg);
+    border-bottom: 1px solid var(--chrome-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-8);
+    position: relative;
+    z-index: 50;
+  }
+
+  .nav-game-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--gold-pale);
+    letter-spacing: 0.04em;
+  }
+
+  .nav-bankroll {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--gold-pale);
+  }
+
+  /* ---- CHIP TRAY ---- */
+
+  .chip-tray {
+    height: var(--chip-tray-height);
+    background-color: var(--chrome-panel);
+    border-top: 1px solid var(--chrome-border);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-8);
+    gap: var(--space-4);
+  }
+
+  .chip-tray-divider {
+    width: 1px;
+    height: 48px;
+    background-color: var(--chrome-border);
+    margin: 0 var(--space-4);
+  }
+
+  .bet-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .bet-summary-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+  }
+
+  .bet-summary-amount {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--text-primary);
+  }
+
+  /* ---- ACTION BAR ---- */
+
+  .action-bar {
+    height: var(--action-bar-height);
+    background-color: var(--chrome-bg);
+    border-top: 1px solid var(--chrome-border-dim);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-8);
+    gap: var(--space-4);
+  }
+
+  .action-bar-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .action-bar-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  /* ---- PAYOUT TABLE ---- */
+
+  /*
+   * Small inset panel, bottom-right corner of the felt.
+   * Shows current game's payout schedule.
+   * Semi-transparent felt-dark background, felt-print text.
+   */
+  .payout-table {
+    position: absolute;
+    bottom: var(--space-6);
+    right: var(--space-6);
+    background-color: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: var(--space-3) var(--space-4);
+    min-width: 160px;
+  }
+
+  .payout-table-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.3);
+    margin-bottom: var(--space-2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: var(--space-2);
+  }
+
+  .payout-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    padding: 2px 0;
+  }
+
+  .payout-hand {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .payout-ratio {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  /* ---- HAND TOTAL DISPLAY ---- */
+
+  .hand-total {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--text-primary);
+    line-height: 1;
+    transition: color var(--transition-fast);
+  }
+
+  .hand-total--bust {
+    color: var(--text-danger);
+  }
+
+  .hand-total--blackjack {
+    color: var(--gold-bright);
+  }
+
+  /* ---- PHASE / STATUS INDICATORS ---- */
+
+  .phase-badge {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    background-color: var(--chrome-border-dim);
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+
+  /* ---- POINT PUCK (Craps) ---- */
+
+  .point-puck {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .point-puck--off {
+    background-color: #1a1a1a;
+    border: 2px solid #3a3a3a;
+    color: var(--text-dim);
+  }
+
+  .point-puck--on {
+    background-color: #f5f5f5;
+    border: 2px solid #e0e0e0;
+    color: #1a1a1a;
+  }
+
+  /* ---- FREE BET BADGE ---- */
+
+  /* Overlays on the chip graphic when a free bet/split has been issued */
+  .free-bet-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: linear-gradient(135deg, #d4a017, #b8860b);
+    color: #1a1a1a;
+    font-family: 'Inter', sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 2px 4px;
+    border-radius: 3px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    z-index: 10;
+  }
+
+}
+
+/* ============================================================
+   CARD 3D FLIP SETUP
+   Requires perspective on parent, transform-style on card wrapper
+============================================================ */
+
+.card-flip-container {
+  perspective: 600px;
+}
+
+.card-flip-inner {
+  position: relative;
+  width: var(--card-width);
+  height: var(--card-height);
+  transform-style: preserve-3d;
+  transition: transform var(--transition-flip);
+}
+
+.card-flip-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face,
+.card-back-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--card-radius);
+}
+
+.card-back-face {
+  transform: rotateY(180deg);
+}
