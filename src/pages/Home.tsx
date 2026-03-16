@@ -13,7 +13,7 @@ type GameCard = {
 const GAMES: GameCard[] = [
   { id: 'blackjack', name: 'Blackjack', phase: 1, felt: 'var(--felt-blackjack)', description: '6-Deck · Dealer Stands Soft 17 · Late Surrender', path: '/blackjack', available: true },
   { id: 'three-card-poker', name: 'Three Card Poker', phase: 1, felt: 'var(--felt-blackjack)', description: 'Ante/Play · Pair Plus · 6-Card Bonus', path: '/three-card-poker', available: true },
-  { id: 'ultimate-texas-holdem', name: 'Ultimate Texas Hold\'Em', phase: 1, felt: 'var(--felt-uth)', description: 'Ante/Play/Blind · Trips · Progressive', path: '/uth', available: false },
+  { id: 'ultimate-texas-holdem', name: 'Ultimate Texas Hold\'Em', phase: 1, felt: 'var(--felt-uth)', description: 'Ante/Play/Blind · Trips · Progressive', path: '/uth', available: true },
   { id: 'free-bet-blackjack', name: 'Free Bet Blackjack', phase: 1, felt: 'var(--felt-free-bet)', description: 'Free Doubles & Splits · Push 22', path: '/free-bet-blackjack', available: false },
   { id: 'baccarat', name: 'Baccarat', phase: 2, felt: 'var(--felt-baccarat)', description: 'Standard & EZ · Dragon Bonus · Panda 8', path: '/baccarat', available: false },
   { id: 'mississippi-stud', name: 'Mississippi Stud', phase: 2, felt: 'var(--felt-mississippi)', description: '3-Card Bonus Side Bet', path: '/mississippi-stud', available: false },
