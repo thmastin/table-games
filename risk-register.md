@@ -124,9 +124,10 @@ Scope: Technical risks associated with the chosen stack. Business and schedule r
 
 ### Card face SVG sourcing
 **Severity:** Medium
-**Probability:** High — high-quality card face SVGs with a permissive license are not trivially available. Most commercially attractive card decks are proprietary.
-**Specific risk:** Building game 1 stalls waiting for card assets, or the project ships with visually inconsistent card faces because assets were sourced piecemeal.
-**Mitigation:** Resolve asset sourcing before writing game 1 code. Evaluate: (1) LGPL/CC0 SVG decks from open-source game projects, (2) purchasing a commercial card deck asset pack, (3) commissioning a single consistent deck. Option 2 is the recommended path — a $20-50 card deck asset purchase eliminates this risk entirely. Log the chosen asset and its license in the repo.
+**Status:** RESOLVED
+**Decision:** Adrian Kennard's SVG card deck (www.me.uk/cards/) — CC0 license, public domain, no attribution required. Classic upscale casino aesthetic, vector SVG scales to any resolution.
+**Card back:** Custom card back deferred to polish phase. Not load-bearing for any game logic or component decision — single swappable asset.
+**Action:** Download and commit the deck to `assets/cards/` before game 1 scaffold phase.
 
 ### Texture atlas regeneration on asset update
 **Severity:** Low
