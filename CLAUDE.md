@@ -6,7 +6,7 @@ Browser-based casino table games suite built to feel premium and intentional.
 
 - **Goal:** Get the feel and UI right before expanding. One game at a time, done completely.
 - **Visual reference:** Encore Casino Games Collection (Steam) — dark ambient palette, correct table geometry, no gamification noise. Modernize it, don't copy it.
-- **Tech stack:** TBD — decided in Phase 0.
+- **Tech stack:** Godot 4, C#, 2D pipeline, NUnit testing, FileAccess persistence.
 
 ## Games Planned
 
@@ -45,7 +45,7 @@ Browser-based casino table games suite built to feel premium and intentional.
 Full phase-by-phase workflow: `docs/workflow.md`
 Current phase and gate history: `docs/progress.md`
 
-**Current status:** Pre-Phase 0 — CLAUDE.md setup complete, awaiting Phase 0 start
+**Current status:** Phase 0 APPROVED — tech stack locked. Phase 1 not yet started.
 
 ## Slash Commands
 
@@ -80,7 +80,8 @@ When a mistake is made or a correction is given:
 |------|---------|--------|
 | `docs/workflow.md` | Full phase-by-phase development workflow | Ready |
 | `docs/progress.md` | Current phase, status, gate history | Ready |
-| `tech-stack-decision.md` | Phase 0 output: locked tech stack | Pending |
+| `tech-stack-decision.md` | Phase 0 output: locked tech stack | Ready |
+| `risk-register.md` | Phase 0 output: identified risks and mitigations | Ready |
 | `product-decisions.md` | Phase 1 output: locked product-level decisions | Pending |
 | `ux-research.md` | Phase 2 output: do/don't design decisions | Pending |
 | `visual-language.md` | Phase 3 output: single source of truth for all visual values | Pending |

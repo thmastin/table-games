@@ -2,17 +2,17 @@
 
 ## Current Phase
 
-Pre-Phase 0 — CLAUDE.md and workflow setup complete, awaiting Phase 0 start
+Phase 1 — Product Decisions (not yet started)
 
 ## Gate History
 
 | Phase | Status | Date | Notes |
 |-------|--------|------|-------|
 | CLAUDE.md + Workflow Setup | APPROVED | 2026-03-29 | Workflow defined, TDD required, extraction deferred to after UTH |
+| Phase 0 — Tech Stack | APPROVED | 2026-03-29 | Godot 4 + C#, 2D pipeline, NUnit, FileAccess. Card faces: Adrian Kennard CC0 SVG deck. |
 
 ## Pending Decisions
 
-- Tech stack (Phase 0)
 - All product decisions (Phase 1)
 
 ## Games Status
