@@ -13,6 +13,7 @@ Gate approval requires the developer to provide explicit written "APPROVED" befo
 - Independent agents within a phase run in parallel
 - Phase ordering is fixed — no skipping, no merging
 - TDD: tests written before implementation in all logic phases
+- **Self-verification:** implementation agents must run the dev server and full test suite before declaring a phase ready for developer review. A phase is not ready for review if the dev server errors or tests fail.
 
 ## Gate Approval Protocol
 
