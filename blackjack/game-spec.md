@@ -1144,7 +1144,7 @@ Side bets resolve in `SideBetResolution`, before main hand resolution. The main 
 2. `SideBetResolution`: `ApplyBankrollDelta(TriLux win amount)` if TriLux wins.
 3. `SideBetResolution`: `ApplyBankrollDelta(LuckyLucky win amount)` if Lucky Lucky wins.
 4. Optional: `ApplyBankrollDelta(-1)` for dealer tip.
-5. `InsurancePrompt` (if applicable): `ApplyBankrollDelta(-InsuranceBet)` if insurance taken and dealer has no blackjack.
+5. `InsurancePrompt` (if applicable): `ApplyBankrollDelta(-InsuranceBet)` when player accepts insurance (deducted at acceptance, unconditionally — see Section 6.6).
 6. `PlayerTurn` (if applicable): `ApplyBankrollDelta(-MainBet)` if double down confirmed.
 7. `PlayerTurn` (if applicable): `ApplyBankrollDelta(-MainBet)` per split performed.
 8. `Resolution`: `ApplyBankrollDelta(main hand outcome)` per hand outcome (see 11.5).
