@@ -1,9 +1,12 @@
 # Blackjack Game Specification
 
-**Version:** 1.0
+**Version:** 1.1
 **Date:** 2026-03-30
 **Status:** Phase 6 deliverable — pending developer approval
 **Phase:** 6
+
+**Changelog:**
+- v1.1: Added Section 16 (TriLux and Lucky Lucky side bets). Added `SideBetResolution` phase to state machine. Renamed `SideBet` field on `BlackjackGameState` to `DoubleDownBet` to avoid naming conflict with new side bet fields. Added `TriLuxBet` and `LuckyLuckyBet` fields.
 
 This document is the authoritative rules reference for the Blackjack implementation. Every rule, edge case, and condition is written out explicitly. No field reads "standard rules apply." Two developers reading this document must produce identical behavior.
 
@@ -219,12 +222,12 @@ After the hole card reveals, the dealer draws cards one at a time until the hand
 
 **Bet mechanics:**
 - The additional bet equals exactly the original `MainBet` for that hand. It cannot be a different amount.
-- `SideBet` on `BlackjackGameState` is set to the doubled amount.
+- `DoubleDownBet` on `BlackjackGameState` is set to the doubled amount.
 - `GlobalState.ApplyBankrollDelta(-MainBet)` is called immediately when double down is confirmed.
 
 **After doubling:**
 - Deal one card to the hand. Evaluate total.
-- If total > 21: hand busts. Bet is lost (both MainBet and SideBet).
+- If total > 21: hand busts. Bet is lost (both MainBet and DoubleDownBet).
 - If total <= 21: hand stands. Advance to next split hand or `DealerTurn`.
 - Auto-stand is applied regardless of total (including 21 and under-21 totals).
 
@@ -310,7 +313,7 @@ After splitting, cards are dealt to fill each new hand to two cards in left-to-r
 - Player recovers `floor(MainBet / 2)`. The other `ceil(MainBet / 2)` is lost.
 - Odd-cent situations do not arise since minimum bet is $5 (always even) and chips are integer denominations, but the floor/ceil rule is explicitly defined for robustness.
 - `GlobalState.ApplyBankrollDelta(floor(MainBet / 2))` is called. The original deduction at bet-lock already removed the full MainBet; this call adds back the recovered half.
-- `SideBet`, `InsuranceBet` are unaffected by surrender (both are 0 at this point since you cannot have placed a side bet before acting, and insurance was already resolved).
+- `DoubleDownBet`, `InsuranceBet` are unaffected by surrender (both are 0 at this point since you cannot have doubled before this first action, and insurance was already resolved).
 
 **After surrendering:**
 - Hand is marked as `Surrendered`. It does not participate in dealer turn evaluation.
@@ -373,7 +376,7 @@ After the insurance decision is locked:
 |---|---|
 | Player blackjack (dealer does not have blackjack) | 3:2 on MainBet |
 | Player wins standard (higher total, or dealer bust) | 1:1 on MainBet |
-| Player wins double down | 1:1 on MainBet + 1:1 on SideBet (doubled amount) |
+| Player wins double down | 1:1 on MainBet + 1:1 on DoubleDownBet (doubled amount) |
 | Push (equal totals, or both player and dealer blackjack) | MainBet returned (no win, no loss) |
 | Player loses | MainBet forfeited |
 | Insurance win (dealer has blackjack) | 2:1 on InsuranceBet |
@@ -400,8 +403,10 @@ The following struct defines the complete shape of `BlackjackGameState`. This is
 ```csharp
 public record BlackjackGameState(
     int MainBet,                        // current main bet for the active hand
-    int SideBet,                        // doubled-down bet amount (0 until double down confirmed)
+    int DoubleDownBet,                  // doubled-down bet amount (0 until double down confirmed; cleared to 0 at start of each hand)
     int InsuranceBet,                   // insurance bet amount (0 until insurance taken; 0 again after resolution)
+    int TriLuxBet,                      // TriLux side bet amount (0 = not placed; set during Betting phase; cleared at start of each hand)
+    int LuckyLuckyBet,                  // Lucky Lucky side bet amount (0 = not placed; set during Betting phase; cleared at start of each hand)
     int[] BetDenominations,             // ordered array of chip denominations placed during Betting phase
     int ActiveHandIndex,                // index into PlayerHands; 0-based; which hand the player is currently acting on
     PlayerHand[] PlayerHands,           // all player hands (1 before any split; up to 4 after splits)
@@ -413,8 +418,10 @@ public record BlackjackGameState(
 
 **Field notes:**
 - `MainBet` reflects the bet for the hand at `ActiveHandIndex`. After splits, each hand has its own MainBet tracked within `PlayerHand`. This top-level `MainBet` always mirrors `PlayerHands[ActiveHandIndex].MainBet` for convenience.
-- `SideBet` is set when a double down is confirmed and cleared to 0 at the start of each new hand.
+- `DoubleDownBet` is set when a double down is confirmed and cleared to 0 at the start of each new hand.
 - `InsuranceBet` is set when the player accepts insurance and cleared to 0 after insurance resolves.
+- `TriLuxBet` is set during the `Betting` phase if the player places a TriLux bet, and cleared to 0 at the start of each new hand. A value of 0 means no TriLux bet was placed.
+- `LuckyLuckyBet` is set during the `Betting` phase if the player places a Lucky Lucky bet, and cleared to 0 at the start of each new hand. A value of 0 means no Lucky Lucky bet was placed.
 - `BetDenominations` is the raw chip stack placed during `Betting`. It drives the visual BetSpot display. Cleared at the start of each new hand.
 - `ActiveHandIndex` advances as split hands are resolved. It is 0 for non-split hands.
 - `PlayerHands` has exactly 1 entry for a non-split hand. Split creates additional entries up to a maximum of 4.
@@ -434,15 +441,15 @@ public record ActionAvailability(
 
 ### 8.1 Availability by Phase
 
-| Action | Idle | Betting | Dealing | InsurancePrompt | PlayerTurn | DealerTurn | Resolution | PlayerBroke |
-|---|---|---|---|---|---|---|---|---|
-| Deal | No | Yes (if bet >= MinBet) | No | No | No | No | No | No |
-| Hit | No | No | No | No | See 8.2 | No | No | No |
-| Stand | No | No | No | No | Yes (if hand not bust) | No | No | No |
-| Double | No | No | No | No | See 8.3 | No | No | No |
-| Split | No | No | No | No | See 8.4 | No | No | No |
-| Surrender | No | No | No | No | See 8.5 | No | No | No |
-| Insurance | No | No | No | See 8.6 | No | No | No | No |
+| Action | Idle | Betting | Dealing | SideBetResolution | InsurancePrompt | PlayerTurn | DealerTurn | Resolution | PlayerBroke |
+|---|---|---|---|---|---|---|---|---|---|
+| Deal | No | Yes (if bet >= MinBet) | No | No | No | No | No | No | No |
+| Hit | No | No | No | No | No | See 8.2 | No | No | No |
+| Stand | No | No | No | No | No | Yes (if hand not bust) | No | No | No |
+| Double | No | No | No | No | No | See 8.3 | No | No | No |
+| Split | No | No | No | No | No | See 8.4 | No | No | No |
+| Surrender | No | No | No | No | No | See 8.5 | No | No | No |
+| Insurance | No | No | No | No | See 8.6 | No | No | No | No |
 
 ### 8.2 Hit Availability (PlayerTurn only)
 
@@ -538,7 +545,7 @@ Every edge case is listed here. No "standard rules apply" shortcuts.
 ### 9.7 Bust on a Doubled Hand
 
 - Player doubles. The one card drawn busts the hand (total > 21).
-- Both MainBet and SideBet (the doubled bet amount) are lost.
+- Both MainBet and DoubleDownBet (the doubled bet amount) are lost.
 - No partial recovery. Full combined bet is forfeited.
 
 ### 9.8 Player Cannot Afford to Double
@@ -747,7 +754,7 @@ For each player hand (including split hands), the outcome is one of:
 
 ### 11.4 Bust Resolution
 
-A player hand that busted during `PlayerTurn` has its outcome determined as Loss at the time of the bust. The bankroll is deducted at deal confirmation for MainBet — it is not deducted again at bust. The bust means the MainBet that was already locked is forfeited. For a doubled hand that busts, the SideBet was deducted when the double was confirmed. Both are already out of the bankroll. At resolution, no further bankroll delta is needed for busted hands. The bust outcome is recorded in `HandResult` for history logging.
+A player hand that busted during `PlayerTurn` has its outcome determined as Loss at the time of the bust. The bankroll is deducted at deal confirmation for MainBet — it is not deducted again at bust. The bust means the MainBet that was already locked is forfeited. For a doubled hand that busts, the DoubleDownBet was deducted when the double was confirmed. Both are already out of the bankroll. At resolution, no further bankroll delta is needed for busted hands. The bust outcome is recorded in `HandResult` for history logging.
 
 ### 11.5 Win Amount Calculation
 
@@ -755,11 +762,11 @@ A player hand that busted during `PlayerTurn` has its outcome determined as Loss
 |---|---|
 | Blackjack win | `MainBet + floor(MainBet * 1.5)` |
 | Standard win | `MainBet * 2` (original bet returned + equal winnings) |
-| Double down win | `(MainBet + SideBet) * 2` (full combined bet returned + equal winnings) |
+| Double down win | `(MainBet + DoubleDownBet) * 2` (full combined bet returned + equal winnings) |
 | Push | `MainBet` (original bet returned only) |
-| Double down push | `MainBet + SideBet` (full combined bet returned, no winnings) |
+| Double down push | `MainBet + DoubleDownBet` (full combined bet returned, no winnings) |
 | Loss | `0` (nothing returned — bet already removed from bankroll) |
-| Double loss | `0` (MainBet and SideBet both forfeited) |
+| Double loss | `0` (MainBet and DoubleDownBet both forfeited) |
 | Surrender | Was applied at surrender time: `floor(MainBet / 2)` returned then. `0` additional here. |
 
 ### 11.6 Multiple Split Hands Resolution
@@ -859,10 +866,14 @@ This section maps game rules to the `GamePhase` state machine defined in `techni
 | `Idle` | `Betting` | Player performs an explicit action to begin betting (clicks a chip denomination or a "Place Bet" affordance); ChipTray becomes active |
 | `Betting` | `Idle` | Player clears bet (ClearBet) |
 | `Betting` | `Dealing` | Player presses Deal (MainBet >= MinBet, bankroll deducted) |
-| `Dealing` | `InsurancePrompt` | Initial deal complete, dealer up-card is Ace |
-| `Dealing` | `PlayerTurn` | Initial deal complete, dealer up-card is not Ace and not 10-value, no peek required |
-| `Dealing` | `PlayerTurn` | Initial deal complete, dealer up-card is 10-value card, peek confirmed no blackjack |
-| `Dealing` | `Resolution` | Initial deal complete, dealer has blackjack (10-value up-card, peek confirmed blackjack) |
+| `Dealing` | `SideBetResolution` | Initial deal complete, at least one side bet (TriLuxBet > 0 or LuckyLuckyBet > 0) was placed |
+| `Dealing` | `InsurancePrompt` | Initial deal complete, no side bets placed (TriLuxBet == 0 and LuckyLuckyBet == 0), dealer up-card is Ace |
+| `Dealing` | `PlayerTurn` | Initial deal complete, no side bets placed, dealer up-card is not Ace and not 10-value, no peek required |
+| `Dealing` | `PlayerTurn` | Initial deal complete, no side bets placed, dealer up-card is 10-value card, peek confirmed no blackjack |
+| `Dealing` | `Resolution` | Initial deal complete, no side bets placed, dealer has blackjack (10-value up-card, peek confirmed blackjack) |
+| `SideBetResolution` | `InsurancePrompt` | Side bets resolved, dealer up-card is Ace |
+| `SideBetResolution` | `PlayerTurn` | Side bets resolved, dealer up-card is not Ace (or 10-value peek confirmed no blackjack) |
+| `SideBetResolution` | `Resolution` | Side bets resolved, dealer has blackjack confirmed (10-value up-card, peek confirmed blackjack) |
 | `InsurancePrompt` | `PlayerTurn` | Insurance decision made, dealer does not have blackjack, player does not have blackjack |
 | `InsurancePrompt` | `Resolution` | Insurance decision made, dealer does not have blackjack, player has blackjack (no player action possible — skip PlayerTurn) |
 | `InsurancePrompt` | `Resolution` | Insurance decision made, dealer has blackjack |
@@ -875,3 +886,292 @@ This section maps game rules to the `GamePhase` state machine defined in `techni
 | `PlayerBroke` | `Idle` | Player reloads at cashier (BankrollChanged signal received, bankroll >= MinBet) |
 
 **Invalid transitions:** Any transition not in the table above is invalid. The state machine must reject invalid transitions with an error log and no state change.
+
+**Side bet + dealer Ace ordering note:** When the dealer shows an Ace AND at least one side bet was placed, the sequence is `Dealing` → `SideBetResolution` → `InsurancePrompt`. Side bets pay or lose in `SideBetResolution` before insurance is offered. The dealer does not peek for blackjack during `SideBetResolution` — the peek occurs as part of the `InsurancePrompt` resolution, as it always does. This means side bets resolve before the dealer's hole card is known.
+
+---
+
+## 16. Side Bets
+
+### 16.0 Overview
+
+Two optional side bets are available: TriLux and Lucky Lucky. Both use the player's first two cards plus the dealer's face-up card (upcard). Both resolve in the `SideBetResolution` phase, immediately after all four initial cards are dealt and before any player action or insurance prompt.
+
+Side bets are independent of the main hand outcome. A player blackjack, dealer blackjack, or any other main-hand outcome does not affect side bet evaluation. Side bets are evaluated strictly on the three-card combination.
+
+Progressive jackpots are not in scope for v1.
+
+---
+
+### 16.1 Side Bet Placement
+
+Side bets are placed during the `Betting` phase alongside the main bet. The following rules govern placement:
+
+**Eligibility:**
+- A main bet (MainBet > 0) must be placed before any side bet can be added. Side bets cannot be placed without a main bet.
+- Neither side bet is required. Both are optional.
+- Both side bets may be placed on the same hand.
+
+**Bet limits:**
+- Minimum side bet: same as the table's minimum main bet (see Section 12 for tier values).
+- Maximum side bet: same as the table's maximum main bet (see Section 12 for tier values).
+- Each side bet is a single flat amount, not a chip stack. The player selects the amount from the same chip denominations available for the main bet.
+- `TriLuxBet` and `LuckyLuckyBet` are each set to exactly the chosen denomination. They are not accumulating chip stacks — one placement sets the value.
+
+**Locking:**
+- Side bets lock when the main bet locks (Deal button pressed, `DealInitiated` transition fires).
+- Once locked, side bets cannot be changed.
+
+**Clearing:**
+- If the player presses Clear Bet during the `Betting` phase: `MainBet`, `TriLuxBet`, and `LuckyLuckyBet` are all cleared to 0 simultaneously. Side bets cannot remain if the main bet is cleared.
+- Side bets are cleared to 0 at the start of each new hand (before the `Betting` phase begins).
+- `GlobalState.ApplyBankrollDelta(-(TriLuxBet + LuckyLuckyBet))` is called at `DealInitiated` alongside the main bet deduction. Side bet amounts are deducted from the bankroll at the same moment the main bet is deducted, not earlier.
+
+---
+
+### 16.2 SideBetResolution Phase
+
+**Entry condition:** `Dealing` phase completes AND (`TriLuxBet > 0` OR `LuckyLuckyBet > 0`).
+
+**Card set used for evaluation:**
+- Card A: player's first dealt card (PlayerHands[0].Cards[0])
+- Card B: player's second dealt card (PlayerHands[0].Cards[1])
+- Card C: dealer's face-up card (DealerHand.Cards[0], the upcard — not the hole card)
+
+The hole card is not visible and is not used for side bet evaluation.
+
+**Evaluation order:**
+1. If `TriLuxBet > 0`: evaluate TriLux hand (see 16.3). Determine pay result. Apply bankroll delta.
+2. If `LuckyLuckyBet > 0`: evaluate Lucky Lucky hand (see 16.4). Determine pay result. Apply bankroll delta.
+3. Display result banners for each placed side bet (win or lose).
+4. Phase transitions out of `SideBetResolution` per state transition rules.
+
+**No player input occurs during `SideBetResolution`.** The phase is automatic. Results are shown briefly (duration: same as deal animation cadence), then the phase transitions. No button is enabled during this phase.
+
+**Dealer blackjack during SideBetResolution:** The dealer's hole card has not been checked during `SideBetResolution`. If the dealer up-card is a 10-value card, the peek for blackjack has not yet occurred. Side bets resolve using only the three visible cards. Dealer blackjack check occurs after `SideBetResolution` exits, exactly as it does when no side bets are placed.
+
+**Peek timing by up-card type:**
+- Up-card is a 10-value card and side bets were placed: `Dealing` → `SideBetResolution`. After side bet resolution, the state machine peeks. If blackjack: → `Resolution` (DealerBlackjack path). If no blackjack: → `PlayerTurn`.
+- Up-card is an Ace and side bets were placed: `Dealing` → `SideBetResolution` → `InsurancePrompt`. Peek occurs as part of InsurancePrompt resolution.
+- Up-card is neither Ace nor 10-value and side bets were placed: `Dealing` → `SideBetResolution` → `PlayerTurn`. No peek needed.
+
+---
+
+### 16.3 TriLux
+
+**Purpose:** A three-card poker hand bet. The three cards (player card 1, player card 2, dealer upcard) are evaluated as a three-card poker hand. Winning hands pay according to the pay table below.
+
+**Three-card hand ranking (highest to lowest):**
+
+| Rank | Name | Definition |
+|---|---|---|
+| 1 (highest) | Straight flush (suited) | All three cards share the same suit AND form a consecutive sequence |
+| 2 | Three of a kind (trips) | All three cards share the same rank |
+| 3 | Straight | Three consecutive ranks, mixed suits (not all the same suit) |
+| 4 (lowest) | Flush | All three cards share the same suit, not in consecutive sequence |
+
+All other three-card combinations do not win. They lose.
+
+**Rank precedence is strict:** Straight flush outranks three of a kind. Three of a kind outranks straight. Straight outranks flush. There is no tie within the winning categories.
+
+**Pay table (Canterbury Park):**
+
+| Hand | Payout |
+|---|---|
+| Straight flush (suited) | 40:1 |
+| Three of a kind (trips) | 25:1 |
+| Straight | 10:1 |
+| Flush | 5:1 |
+| All other | Lose (bet forfeited) |
+
+**Payout mechanics:** When TriLux wins, `GlobalState.ApplyBankrollDelta(TriLuxBet + (TriLuxBet * multiplier))` is called, where `multiplier` is the pay table multiplier (40, 25, 10, or 5). Example: $25 bet on a straight flush → `ApplyBankrollDelta(25 + 25 * 40)` = `ApplyBankrollDelta(1025)`. When TriLux loses, no bankroll delta is called (bet was already deducted at DealInitiated).
+
+**Hand evaluation rules:**
+
+**Straights:** Three consecutive ranks. Ace may be high (A-2-3... no — see below) or low. Ace counts as 1 for low straights (A-2-3) and as the high card for high straights (Q-K-A). Ace may not wrap around (K-A-2 is not a straight). Valid straight sequences: A-2-3, 2-3-4, 3-4-5, 4-5-6, 5-6-7, 6-7-8, 7-8-9, 8-9-10, 9-10-J, 10-J-Q, J-Q-K, Q-K-A.
+
+**Flush:** All three cards share the same suit (clubs, diamonds, hearts, or spades). Rank is irrelevant for flush determination.
+
+**Straight flush:** Satisfies both the straight condition and the flush condition simultaneously. Always evaluated as straight flush (rank 1), not as a separate straight or flush.
+
+**Three of a kind:** All three cards have the same rank. Example: three Jacks, three 7s. Suits are irrelevant.
+
+**Evaluation algorithm:**
+1. Determine if the three cards form a straight flush (meet both straight and flush conditions). If yes: result = straight flush.
+2. Else, determine if all three ranks are equal. If yes: result = three of a kind.
+3. Else, determine if the three cards form a straight (consecutive sequence, any suits). If yes: result = straight.
+4. Else, determine if all three cards share the same suit. If yes: result = flush.
+5. Else: result = no win (lose).
+
+**Bet limits:** Same as table tier min/max (see Section 12). Default tier: $25 min, $500 max.
+
+**Independence from main hand:** TriLux evaluates independently. If the player has blackjack, TriLux still pays if the three-card combination qualifies. If the dealer has blackjack, TriLux still pays — the side bet resolved before dealer blackjack was confirmed (see 16.2).
+
+**Edge case — three of a kind with suited cards:** Three cards of the same rank cannot also form a straight or flush (three identical ranks cannot be consecutive). Three of a kind with three same-suited cards (e.g., three 7-of-clubs — impossible with one deck but in a 6-deck shoe it is possible) is evaluated as three of a kind (rank 2), not as a flush (rank 4), because three of a kind outranks flush.
+
+---
+
+### 16.3.1 TriLux Dealer Tip (Lucky George)
+
+When TriLux wins (any winning outcome), a "Tip Dealer" button is shown in the UI after the win result banner is displayed, before the phase transitions out of `SideBetResolution`.
+
+**Tip amount:** 1 unit = the table's minimum chip denomination ($1 at Standard tier).
+
+**Tip flow:**
+1. TriLux win result displays.
+2. "Tip Dealer" button appears alongside a dismiss affordance ("No Thanks" or equivalent close action).
+3. Player has two options:
+   - Press "Tip Dealer": the tip amount is recorded in `history.json` as a `DealerTip` event. `GlobalState.ApplyBankrollDelta(-1)` is called (tip deducted from bankroll). The button disappears. Phase transition proceeds.
+   - Press dismiss or take no action within the transition window: no tip recorded, no bankroll change. Phase transition proceeds.
+4. The phase does not wait indefinitely. If the player does not interact within the result display duration, the dismiss path is taken automatically.
+
+**v1 behavior:** The tip is display-only in the sense that it does not affect main-hand bankroll math. It is a real bankroll deduction of $1. The tip is optional. It is off by default — the feature is shown (button is present) but the player must actively press it to tip.
+
+**Settings toggle:** A setting `DealerTipEnabled` (bool, default `true`) controls whether the tip button is shown at all. When `DealerTipEnabled == false`, the "Tip Dealer" button is not shown on TriLux wins. The phase transitions immediately after the win banner. This setting is accessible in the game settings panel.
+
+**History record:** When a tip is given, `HandRecord.DealerTip` is set to the tip amount (1). When no tip is given or the feature is disabled, `HandRecord.DealerTip` is 0.
+
+**Tip does not affect TriLux payout:** The TriLux win bankroll delta is applied before the tip prompt is shown. The tip is a separate subsequent deduction.
+
+---
+
+### 16.4 Lucky Lucky
+
+**Purpose:** A combined-value bet. The three cards (player card 1, player card 2, dealer upcard) are summed. Specific totals and combinations pay according to the pay table below.
+
+**Ace value for Lucky Lucky:** Ace counts as 11 for total calculation, consistent with blackjack hand value rules (see Section 3). If the total would exceed 21 with an Ace at 11, the Ace counts as 1. Apply the same hand-total algorithm from Section 3 to the three-card set.
+
+**Pay table (Canterbury Park / standard):**
+
+| Hand | Condition | Payout |
+|---|---|---|
+| Suited 7-7-7 | All three cards are 7s AND all share the same suit | 200:1 |
+| Suited 6-7-8 | Cards are ranks 6, 7, and 8 (any order) AND all share the same suit | 100:1 |
+| Unsuited 7-7-7 | All three cards are 7s AND not all the same suit | 30:1 |
+| Unsuited 6-7-8 | Cards are ranks 6, 7, and 8 (any order) AND not all the same suit | 10:1 |
+| Any 21 | Three-card total equals 21 AND is not a 6-7-8 or 7-7-7 combination | 3:1 |
+| 20 | Three-card total equals 20 | 2:1 |
+| 19 | Three-card total equals 19 | 1:1 |
+| All other | Three-card total is 18 or less, or any combination not listed above | Lose |
+
+**Pay table precedence rules:**
+- 6-7-8 and 7-7-7 combinations always pay their specific rate. They never pay the generic "Any 21" rate even though their total is 21. The specific combination check runs before the generic 21 check.
+- Suited rates take precedence over unsuited rates. If a 7-7-7 combination is suited, it pays 200:1, not 30:1.
+- The evaluation algorithm checks in this exact order: suited 7-7-7 → suited 6-7-8 → unsuited 7-7-7 → unsuited 6-7-8 → any 21 → 20 → 19 → lose.
+
+**Payout mechanics:** When Lucky Lucky wins, `GlobalState.ApplyBankrollDelta(LuckyLuckyBet + (LuckyLuckyBet * multiplier))` is called, where `multiplier` is the pay table multiplier. When Lucky Lucky loses, no bankroll delta is called (bet was already deducted at DealInitiated).
+
+**Hand evaluation rules:**
+
+**Suited:** All three cards share the same suit. Standard four suits: hearts, diamonds, clubs, spades. No wild suits. A "suited" result requires all three cards to be the same suit — two matching is not sufficient.
+
+**7-7-7:** All three cards have rank 7 (numeric value 7). In a 6-deck shoe, three 7s are possible. Suit determines suited vs. unsuited.
+
+**6-7-8:** The three cards, taken in any order, have ranks 6, 7, and 8 exactly. No substitutions. No Ace-substitution. The combination must be exactly one 6, one 7, and one 8.
+
+**Total of 21:** Sum the three cards using the Section 3 hand total algorithm. If the result is 21 AND the three cards are not a 6-7-8 combination and are not a 7-7-7 combination, this pays 3:1.
+
+**Total of 20 or 19:** Same algorithm. If total is exactly 20 or 19, pay 2:1 or 1:1 respectively.
+
+**Evaluation algorithm:**
+1. Determine rank set: extract ranks of the three cards.
+2. Check if all three ranks are 7 (7-7-7 check): if yes, check if all three suits match. If suited: suited 7-7-7 (200:1). If not all same suit: unsuited 7-7-7 (30:1).
+3. Check if the rank set is {6, 7, 8} (exactly one of each, any order): if yes, check if all three suits match. If suited: suited 6-7-8 (100:1). If not all same suit: unsuited 6-7-8 (10:1).
+4. Compute three-card total using Section 3 algorithm. If total == 21: any 21 (3:1).
+5. If total == 20: 20 (2:1).
+6. If total == 19: 19 (1:1).
+7. Else: lose.
+
+**Bet limits:** Same as table tier min/max (see Section 12). Default tier: $25 min, $500 max.
+
+**Independence from main hand:** Lucky Lucky evaluates independently of main hand outcome. Player blackjack, dealer blackjack, and all other main-hand results do not affect Lucky Lucky evaluation.
+
+**Edge case — Ace in a 6-7-8:** An Ace cannot substitute for 6, 7, or 8 in the 6-7-8 combination check. The rank check looks at literal ranks. A hand with Ace-7-8 does not qualify as 6-7-8 regardless of the Ace's numeric value. However, an Ace-7-8 has a total of Ace(11)+7+8 = 26 → Ace reclassified to 1 → total = 16. This hand does not hit any pay line and loses.
+
+**Edge case — Ace contributing to a 21 total:** Ace-10 (two cards) + any card = possible 21. Example: player Ace + player 6 + dealer 4 = 21 (Ace at 11). This qualifies for "Any 21" at 3:1. Example: player Ace + player King + dealer 5 = 26 → Ace reclassifies to 1 → total = 16. This loses.
+
+---
+
+### 16.5 Side Bet Resolution Sequence (Full)
+
+The complete sequence for `SideBetResolution` phase:
+
+1. **Phase enters.** All player action buttons are disabled. No player input is accepted.
+2. **TriLux evaluation (if TriLuxBet > 0):**
+   a. Identify the three cards: PlayerHands[0].Cards[0], PlayerHands[0].Cards[1], DealerHand.Cards[0].
+   b. Run TriLux evaluation algorithm (16.3).
+   c. If win: call `GlobalState.ApplyBankrollDelta(TriLuxBet + TriLuxBet * multiplier)`. Display TriLux win banner with pay amount.
+   d. If lose: display TriLux lose banner. No bankroll delta.
+   e. If win and `DealerTipEnabled == true`: show "Tip Dealer" button. Wait for player action or auto-timeout (see 16.3.1). Resolve tip.
+3. **Lucky Lucky evaluation (if LuckyLuckyBet > 0):**
+   a. Same three cards as above.
+   b. Run Lucky Lucky evaluation algorithm (16.4).
+   c. If win: call `GlobalState.ApplyBankrollDelta(LuckyLuckyBet + LuckyLuckyBet * multiplier)`. Display Lucky Lucky win banner with pay amount.
+   d. If lose: display Lucky Lucky lose banner. No bankroll delta.
+4. **History record updated** with side bet outcomes (see 16.6).
+5. **Phase transitions** per state transition rules (16.2 and Section 15).
+
+**Order when both bets placed:** TriLux resolves first, then Lucky Lucky. Both win/lose outcomes are displayed before the phase transitions.
+
+---
+
+### 16.6 History Recording for Side Bets
+
+`HandRecord` in `history.json` is extended with the following fields for side bet tracking:
+
+- `TriLuxBet` (int): amount wagered. 0 if not placed.
+- `TriLuxResult` (string): "StraightFlush", "ThreeOfAKind", "Straight", "Flush", "Lose", or "NotPlaced".
+- `TriLuxPayout` (int): net payout received. 0 if lose or not placed.
+- `LuckyLuckyBet` (int): amount wagered. 0 if not placed.
+- `LuckyLuckyResult` (string): "Suited777", "Suited678", "Unsuited777", "Unsuited678", "Any21", "Twenty", "Nineteen", "Lose", or "NotPlaced".
+- `LuckyLuckyPayout` (int): net payout received. 0 if lose or not placed.
+- `DealerTip` (int): tip amount paid. 0 if no tip given or feature disabled.
+
+---
+
+### 16.7 Win/Loss Resolution — Side Bet Integration
+
+Side bets resolve in `SideBetResolution`, before main hand resolution. The main hand resolution sequence in Section 11.2 is unchanged. Side bet bankroll deltas (step 2 and 3 of 16.5) are applied during `SideBetResolution`. At the `Resolution` phase (Section 11.2), no additional side bet bankroll changes occur — side bets are already settled.
+
+**Full bankroll delta order for a hand with side bets:**
+
+1. `DealInitiated`: `ApplyBankrollDelta(-(MainBet + TriLuxBet + LuckyLuckyBet))` — all bets deducted at once.
+2. `SideBetResolution`: `ApplyBankrollDelta(TriLux win amount)` if TriLux wins.
+3. `SideBetResolution`: `ApplyBankrollDelta(LuckyLucky win amount)` if Lucky Lucky wins.
+4. Optional: `ApplyBankrollDelta(-1)` for dealer tip.
+5. `InsurancePrompt` (if applicable): `ApplyBankrollDelta(-InsuranceBet)` if insurance taken and dealer has no blackjack.
+6. `PlayerTurn` (if applicable): `ApplyBankrollDelta(-MainBet)` if double down confirmed.
+7. `PlayerTurn` (if applicable): `ApplyBankrollDelta(-MainBet)` per split performed.
+8. `Resolution`: `ApplyBankrollDelta(main hand outcome)` per hand outcome (see 11.5).
+9. `Resolution` (if applicable): insurance win applied if dealer has blackjack (see 6.6).
+
+---
+
+### 16.8 Rules Panel Additions
+
+Add the following section to `RulesPanel` content (appended after Section 4 — Payouts from Section 14):
+
+**Section 5 — TriLux Side Bet**
+- Optional bet on the three-card poker value of your two cards plus the dealer's upcard.
+- Pays: Straight flush 40:1 | Trips 25:1 | Straight 10:1 | Flush 5:1.
+- Resolves immediately after the deal, before player action.
+- Evaluated as a three-card poker hand. Ace plays high or low in straights.
+
+**Section 6 — Lucky Lucky Side Bet**
+- Optional bet on the combined total of your two cards plus the dealer's upcard.
+- Pays: Suited 7-7-7 200:1 | Suited 6-7-8 100:1 | Unsuited 7-7-7 30:1 | Unsuited 6-7-8 10:1 | Any 21 (other) 3:1 | 20 pays 2:1 | 19 pays 1:1.
+- Resolves immediately after the deal, before player action.
+
+---
+
+### 16.9 Sound Triggers (Side Bet Additions)
+
+| Event | Sound |
+|---|---|
+| TriLux win | Side bet win sfx (distinct from main hand win chime) |
+| TriLux lose | Side bet lose sfx |
+| Lucky Lucky win | Side bet win sfx |
+| Lucky Lucky lose | Side bet lose sfx |
+| Dealer tip given | Chip clink sfx (universal) |
+
+All sounds conditional on `GlobalState.SoundEnabled == true`.
