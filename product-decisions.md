@@ -122,3 +122,31 @@ The following items are explicitly out of scope for the initial build. Noted her
 - Dealer voice lines
 - Interactive tutorials — guided in-game onboarding
 - Resolution setting in settings panel
+
+---
+
+## Side Bets — Blackjack v1
+
+**Decision:** Blackjack ships with two side bets: TriLux and Lucky Lucky. These match the Canterbury Park and Running Aces (Minnesota) standard lineup.
+
+**TriLux**
+- Bet uses the player's first two cards + dealer upcard (three-card poker hand evaluation)
+- Pays on: flush, straight, three of a kind, straight flush — pay table to be defined in game spec
+- Resolves immediately after the deal, before player action
+- Includes dealer tip hook (Lucky George) on winning hands — implementation detail TBD in game spec
+- Licensed product; pay table sourced from Canterbury Park's implementation
+
+**Lucky Lucky**
+- Bet uses the player's first two cards + dealer upcard (three-card total evaluation)
+- Pays on: totals of 19, 20, 21; 6-7-8; 7-7-7 — suited combinations pay more
+- Resolves immediately after the deal, before player action
+- Pay table to be defined in game spec
+
+**Deferred to post-v1:**
+- Perfect Pairs (not offered at MN card rooms; deprioritized)
+- Progressive side bets (Blazing 7s, Super Sevens, etc.)
+- All other side bets
+
+**Notes:**
+- `SideBet` field on `BlackjackGameState` is currently used for double-down amount only. Before implementing side bets, that field must be renamed (e.g. `DoubleDownBet`) and dedicated side bet fields added.
+- Side bets resolve at a new phase between deal completion and `PlayerTurn`. State machine must be updated in Phase 7 when side bets are specced.
