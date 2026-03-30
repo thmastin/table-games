@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 1 — Product Decisions (not yet started)
+Phase 2 — UX Research (not yet started)
 
 ## Gate History
 
@@ -10,10 +10,11 @@ Phase 1 — Product Decisions (not yet started)
 |-------|--------|------|-------|
 | CLAUDE.md + Workflow Setup | APPROVED | 2026-03-29 | Workflow defined, TDD required, extraction deferred to after UTH |
 | Phase 0 — Tech Stack | APPROVED | 2026-03-29 | Godot 4 + C#, 2D pipeline, NUnit, FileAccess. Card faces: Adrian Kennard CC0 SVG deck. |
+| Phase 1 — Product Decisions | APPROVED | 2026-03-29 | Loan mechanic, shared bankroll, $1k default, table tiers per game, settings panel, sound scope, rules reference panel, platform specs. |
 
 ## Pending Decisions
 
-- All product decisions (Phase 1)
+None — ready for Phase 2.
 
 ## Games Status
 
