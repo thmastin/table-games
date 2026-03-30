@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 2 — UX Research (not yet started)
+Phase 3 — Visual Language (not yet started)
 
 ## Gate History
 
@@ -11,10 +11,11 @@ Phase 2 — UX Research (not yet started)
 | CLAUDE.md + Workflow Setup | APPROVED | 2026-03-29 | Workflow defined, TDD required, extraction deferred to after UTH |
 | Phase 0 — Tech Stack | APPROVED | 2026-03-29 | Godot 4 + C#, 2D pipeline, NUnit, FileAccess. Card faces: Adrian Kennard CC0 SVG deck. |
 | Phase 1 — Product Decisions | APPROVED | 2026-03-29 | Loan mechanic, shared bankroll, $1k default, table tiers per game, settings panel, sound scope, rules reference panel, platform specs. |
+| Phase 2 — UX Research | APPROVED | 2026-03-29 | Grand Atrium aesthetic locked. Stitch palette, Noto Serif + Manrope, no-border tonal layering, 300-500ms UI transitions. |
 
 ## Pending Decisions
 
-None — ready for Phase 2.
+None — ready for Phase 3.
 
 ## Games Status
 
