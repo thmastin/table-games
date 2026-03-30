@@ -870,7 +870,7 @@ This section maps game rules to the `GamePhase` state machine defined in `techni
 | `Dealing` | `InsurancePrompt` | Initial deal complete, no side bets placed (TriLuxBet == 0 and LuckyLuckyBet == 0), dealer up-card is Ace |
 | `Dealing` | `PlayerTurn` | Initial deal complete, no side bets placed, dealer up-card is not Ace and not 10-value, no peek required |
 | `Dealing` | `PlayerTurn` | Initial deal complete, no side bets placed, dealer up-card is 10-value card, peek confirmed no blackjack |
-| `Dealing` | `Resolution` | Initial deal complete, no side bets placed, dealer has blackjack (10-value up-card, peek confirmed blackjack) |
+| `Dealing` | `Resolution` | Initial deal complete, no side bets placed, dealer has blackjack (10-value up-card, peek executes inline at Dealing phase exit, confirms blackjack) |
 | `SideBetResolution` | `InsurancePrompt` | Side bets resolved, dealer up-card is Ace |
 | `SideBetResolution` | `PlayerTurn` | Side bets resolved, dealer up-card is not Ace (or 10-value peek confirmed no blackjack) [^peek-inline] |
 | `SideBetResolution` | `Resolution` | Side bets resolved, dealer has blackjack confirmed (10-value up-card, peek confirmed blackjack) |
