@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 5 — Technical Architecture (not yet started)
+Phase 6 — Blackjack Game Spec (not yet started)
 
 ## Gate History
 
@@ -14,10 +14,11 @@ Phase 5 — Technical Architecture (not yet started)
 | Phase 2 — UX Research | APPROVED | 2026-03-29 | Grand Atrium aesthetic locked. Stitch palette, Noto Serif + Manrope, no-border tonal layering, 300-500ms UI transitions. |
 | Phase 3 — Visual Language | APPROVED | 2026-03-29 | Card back: Option B (chevron+seal). Chip: Option A (classic full-face). Table surface: Option B (directional grain+bevel). |
 | Phase 4 — Component Boundaries | APPROVED | 2026-03-29 | 13 shared components, logic layer boundary rules, Rank enum locked, joker support documented as known future item. |
+| Phase 5 — Technical Architecture | APPROVED | 2026-03-30 | GlobalState autoload + scene-local split, FileAccess JSON persistence, 60fps/4s/150MB baseline, folder structure locked. |
 
 ## Pending Decisions
 
-None — ready for Phase 5.
+None — ready for Phase 6.
 
 ## Games Status
 

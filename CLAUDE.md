@@ -45,7 +45,7 @@ Browser-based casino table games suite built to feel premium and intentional.
 Full phase-by-phase workflow: `docs/workflow.md`
 Current phase and gate history: `docs/progress.md`
 
-**Current status:** Phase 0 APPROVED — tech stack locked. Phase 1 not yet started.
+**Current status:** Phase 5 APPROVED — technical architecture locked. Phase 6 not yet started.
 
 ## Slash Commands
 
@@ -86,4 +86,4 @@ When a mistake is made or a correction is given:
 | `ux-research.md` | Phase 2 output: do/don't design decisions | Pending |
 | `visual-language.md` | Phase 3 output: single source of truth for all visual values | Pending |
 | `component-boundaries.md` | Phase 4 output: shared vs. game-specific component rules | Pending |
-| `technical-architecture.md` | Phase 5 output: state, data flow, persistence model | Pending |
+| `technical-architecture.md` | Phase 5 output: state, data flow, persistence model | Ready |
