@@ -82,8 +82,8 @@ When a mistake is made or a correction is given:
 | `docs/progress.md` | Current phase, status, gate history | Ready |
 | `tech-stack-decision.md` | Phase 0 output: locked tech stack | Ready |
 | `risk-register.md` | Phase 0 output: identified risks and mitigations | Ready |
-| `product-decisions.md` | Phase 1 output: locked product-level decisions | Pending |
-| `ux-research.md` | Phase 2 output: do/don't design decisions | Pending |
-| `visual-language.md` | Phase 3 output: single source of truth for all visual values | Pending |
-| `component-boundaries.md` | Phase 4 output: shared vs. game-specific component rules | Pending |
+| `product-decisions.md` | Phase 1 output: locked product-level decisions | Ready |
+| `ux-research.md` | Phase 2 output: do/don't design decisions | Ready |
+| `visual-language.md` | Phase 3 output: single source of truth for all visual values | Ready |
+| `component-boundaries.md` | Phase 4 output: shared vs. game-specific component rules | Ready |
 | `technical-architecture.md` | Phase 5 output: state, data flow, persistence model | Ready |
