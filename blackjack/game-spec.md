@@ -255,9 +255,7 @@ After the hole card reveals, the dealer draws cards one at a time until the hand
 
 **Split count limit:** Starting from the original two-card hand, the player may split a maximum of 3 times, producing a maximum of 4 simultaneous hands. Each split costs one additional MainBet from the bankroll.
 
-**Re-split Aces:** Not allowed. If the player splits Aces and one of the resulting hands receives another Ace as its single card, that hand is not eligible for further splitting. It plays as a two-card hand with total value 12 (hard, Ace valued at 1 since both counted as 1 gives 2, but one Ace must be 11 — actually: Ace + Ace = soft 12, and no hit is allowed on split Aces so the hand stands at soft 12).
-
-Wait — correction on re-split Aces rule application: The player splits Aces. Each resulting hand receives exactly one card. That card could be any card. The resulting hand cannot split again regardless of what the second card is. So if the second card is also an Ace, the hand is Ace + Ace = soft 12, stands, and is not eligible to split again.
+**Re-split Aces:** Not allowed. The player splits Aces. Each resulting hand receives exactly one card. That card could be any card. The resulting hand cannot split again regardless of what that card is. If the card received is another Ace, the hand is Ace + Ace = soft 12. The hand automatically stands at soft 12 and is not eligible to split again.
 
 **Bet mechanics on split:**
 - The new split hand is created with a MainBet equal to the original MainBet.
@@ -360,8 +358,9 @@ After the insurance decision is locked:
 - No further player action occurs. Proceed to Resolution phase.
 
 **Case B — Dealer does not have blackjack:**
-- Insurance bet loses: `InsuranceBet` is forfeited. No bankroll change needed (it was already deducted). `InsuranceBet` is recorded as 0 for resolution purposes.
-- Reveal hole card state transitions to player action. `InsurancePrompt` → `PlayerTurn`.
+- Insurance bet loses: `InsuranceBet` is forfeited. No bankroll change needed (it was already deducted at the moment the player confirmed the insurance bet). `InsuranceBet` is recorded as 0 for resolution purposes.
+- When the dealer's hole card is revealed and confirms no blackjack, the losing insurance bet has already been deducted from the bankroll display at the moment the player confirmed the insurance bet. No additional deduction occurs at resolution. The bankroll display does not change at hole card reveal for a losing insurance bet.
+- Reveal hole card state transitions to player action. `InsurancePrompt` → `PlayerTurn` (or → `Resolution` if player has blackjack — see 9.1).
 - Dealer's hole card remains face-down until `DealerTurnStarted`.
 
 **Even money note (for developer):** If player has blackjack and takes insurance, and dealer has blackjack, the result is: insurance wins 2:1 (net +InsuranceBet * 2) + main hand is push (+MainBet back). If player has blackjack and takes insurance, and dealer does NOT have blackjack: insurance loses (-InsuranceBet), main hand pays 3:2 (net +MainBet * 1.5). The system handles this through the standard resolution path — no special case needed.
@@ -393,6 +392,33 @@ After the insurance decision is locked:
 ## 8. Action Availability Rules
 
 The `ActionAvailability` record on `BlackjackGameState` must be recomputed on every state transition. The scene reads this record to enable or disable buttons. Buttons are never enabled/disabled by the scene directly based on game logic — all logic is in the state machine.
+
+### 8.0 BlackjackGameState Field Shape
+
+The following struct defines the complete shape of `BlackjackGameState`. This is the authoritative field list. Cross-reference `technical-architecture.md` for the persistence model and serialization rules.
+
+```csharp
+public record BlackjackGameState(
+    int MainBet,                        // current main bet for the active hand
+    int SideBet,                        // doubled-down bet amount (0 until double down confirmed)
+    int InsuranceBet,                   // insurance bet amount (0 until insurance taken; 0 again after resolution)
+    int[] BetDenominations,             // ordered array of chip denominations placed during Betting phase
+    int ActiveHandIndex,                // index into PlayerHands; 0-based; which hand the player is currently acting on
+    PlayerHand[] PlayerHands,           // all player hands (1 before any split; up to 4 after splits)
+    DealerHand DealerHand,              // dealer's current hand (both cards; hole card face-down state tracked separately)
+    ActionAvailability ActionAvailability,  // recomputed on every state transition (see below)
+    GamePhase CurrentPhase              // current phase of the state machine
+);
+```
+
+**Field notes:**
+- `MainBet` reflects the bet for the hand at `ActiveHandIndex`. After splits, each hand has its own MainBet tracked within `PlayerHand`. This top-level `MainBet` always mirrors `PlayerHands[ActiveHandIndex].MainBet` for convenience.
+- `SideBet` is set when a double down is confirmed and cleared to 0 at the start of each new hand.
+- `InsuranceBet` is set when the player accepts insurance and cleared to 0 after insurance resolves.
+- `BetDenominations` is the raw chip stack placed during `Betting`. It drives the visual BetSpot display. Cleared at the start of each new hand.
+- `ActiveHandIndex` advances as split hands are resolved. It is 0 for non-split hands.
+- `PlayerHands` has exactly 1 entry for a non-split hand. Split creates additional entries up to a maximum of 4.
+- `CurrentPhase` matches the state machine's authoritative phase. This field is read-only from the scene's perspective — it is written only by the state machine.
 
 ```csharp
 public record ActionAvailability(
@@ -479,6 +505,8 @@ Every edge case is listed here. No "standard rules apply" shortcuts.
 - Dealer's up-card is NOT an Ace or 10-value: player blackjack wins immediately at 3:2. No dealer draw occurs.
 - Dealer's up-card IS a 10-value card: dealer peeks. Hole card is not a blackjack-completing card. Player blackjack wins at 3:2. No dealer draw occurs.
 - Dealer's up-card IS an Ace: insurance is offered (InsurancePrompt phase). After insurance resolution (dealer peeks, does not have blackjack), player blackjack wins at 3:2. No dealer draw occurs.
+
+**Important — InsurancePrompt with player blackjack and no dealer blackjack:** When the dealer's up-card is an Ace, insurance is offered regardless of the player's hand. If after the insurance decision the dealer does not have blackjack AND the player has blackjack, the state transitions from `InsurancePrompt` directly to `Resolution`. `PlayerTurn` is skipped entirely — there is no player action to take on a blackjack hand. The player blackjack pays 3:2 at resolution. Any insurance bet taken is forfeited as a losing insurance bet (dealer had no blackjack).
 
 ### 9.2 Player Blackjack, Dealer Also Has Blackjack
 
@@ -626,8 +654,8 @@ Every edge case is listed here. No "standard rules apply" shortcuts.
 
 | Phase | Bet State |
 |---|---|
-| Idle | No bet. ChipTray inactive. |
-| Betting | Player is placing chips. ChipTray active. Bet amount accumulating. |
+| Idle | No bet. ChipTray is NOT available. Player is watching the table. No chip placement is possible. |
+| Betting | Player is placing chips. ChipTray active. Bet amount accumulating. Clear Bet button available when MainBet > 0. |
 | DealInitiated (transition) | Bet locks. Bankroll deducted. Phase advances to Dealing. |
 | Dealing | Bet locked and displayed. No changes permitted. |
 | PlayerTurn | Bet locked. Split/double may add to it. |
@@ -636,6 +664,8 @@ Every edge case is listed here. No "standard rules apply" shortcuts.
 | Idle (next hand) | Bet cleared. BetSpot empty. |
 
 ### 10.2 Placing Chips
+
+The ChipTray is not available during `Idle`. The player must first take an explicit action — clicking a chip denomination or a "Place Bet" affordance — which fires the `Idle` → `Betting` transition. Only after that transition does the ChipTray become active and chip placement become possible.
 
 1. Phase must be `Betting`.
 2. Player selects a denomination from ChipTray (emits `DenominationSelected`).
@@ -699,7 +729,7 @@ The full sequence from dealer reveals hole card to chips moving:
    - **Push:** Push animation plays. `GlobalState.ApplyBankrollDelta(MainBet)` is called. (MainBet only returns.)
    - **Loss:** Loss animation plays. No bankroll delta (MainBet was already deducted at deal confirmation).
    - **Surrender:** Surrender was already resolved at time of surrender. No additional bankroll change. Recovery was applied then.
-6. **Insurance resolution (if applicable).** Insurance resolves in Step 3 if dealer has blackjack (see 6.6). If dealer does not have blackjack, insurance was already forfeited in the `InsurancePrompt` phase — no further action.
+6. **Insurance resolution (if applicable).** Insurance resolves in Step 3 if dealer has blackjack (see 6.6). If dealer does not have blackjack, insurance was already forfeited in the `InsurancePrompt` phase — no further action. When the dealer's hole card is revealed and confirms no blackjack, the losing insurance bet has already been deducted from the bankroll display at the moment the player confirmed the insurance bet. No additional deduction occurs at resolution. The bankroll display does not change at hole card reveal for a losing insurance bet.
 7. **BetSpot cleared.** All bet chips clear after resolution animation completes.
 8. **Phase → Idle.** New hand may be started.
 
@@ -717,9 +747,7 @@ For each player hand (including split hands), the outcome is one of:
 
 ### 11.4 Bust Resolution
 
-A player hand that busted during `PlayerTurn` has its outcome already determined as Loss at the time of the bust. It is tracked through the Resolution phase but its loss was committed (no bankroll recovery) when the bust occurred — or rather, since the bankroll was deducted at deal confirmation, no recovery happens. The bust outcome is recorded in `HandResult` for history logging.
-
-Wait — correction: the bankroll is deducted at deal confirmation for MainBet. It is not deducted again at bust. The bust simply means the MainBet that was already locked is forfeited. For a doubled hand that busts, the SideBet was deducted when the double was confirmed. Both are already out of the bankroll. At resolution, no further bankroll delta is needed for busted hands.
+A player hand that busted during `PlayerTurn` has its outcome determined as Loss at the time of the bust. The bankroll is deducted at deal confirmation for MainBet — it is not deducted again at bust. The bust means the MainBet that was already locked is forfeited. For a doubled hand that busts, the SideBet was deducted when the double was confirmed. Both are already out of the bankroll. At resolution, no further bankroll delta is needed for busted hands. The bust outcome is recorded in `HandResult` for history logging.
 
 ### 11.5 Win Amount Calculation
 
@@ -828,13 +856,15 @@ This section maps game rules to the `GamePhase` state machine defined in `techni
 
 | From | To | Trigger |
 |---|---|---|
-| `Idle` | `Betting` | Player places first chip (DenominationSelected with bankroll >= denomination) |
+| `Idle` | `Betting` | Player performs an explicit action to begin betting (clicks a chip denomination or a "Place Bet" affordance); ChipTray becomes active |
 | `Betting` | `Idle` | Player clears bet (ClearBet) |
 | `Betting` | `Dealing` | Player presses Deal (MainBet >= MinBet, bankroll deducted) |
 | `Dealing` | `InsurancePrompt` | Initial deal complete, dealer up-card is Ace |
-| `Dealing` | `PlayerTurn` | Initial deal complete, dealer up-card is not Ace, dealer peek returned no blackjack |
+| `Dealing` | `PlayerTurn` | Initial deal complete, dealer up-card is not Ace and not 10-value, no peek required |
+| `Dealing` | `PlayerTurn` | Initial deal complete, dealer up-card is 10-value card, peek confirmed no blackjack |
 | `Dealing` | `Resolution` | Initial deal complete, dealer has blackjack (10-value up-card, peek confirmed blackjack) |
-| `InsurancePrompt` | `PlayerTurn` | Insurance decision made, dealer does not have blackjack |
+| `InsurancePrompt` | `PlayerTurn` | Insurance decision made, dealer does not have blackjack, player does not have blackjack |
+| `InsurancePrompt` | `Resolution` | Insurance decision made, dealer does not have blackjack, player has blackjack (no player action possible — skip PlayerTurn) |
 | `InsurancePrompt` | `Resolution` | Insurance decision made, dealer has blackjack |
 | `PlayerTurn` | `PlayerTurn` | Player hits (card dealt, hand not bust, not 21) — active hand unchanged, card added |
 | `PlayerTurn` | `PlayerTurn` | Player splits or doubles (active hand advanced or new hands created) |
