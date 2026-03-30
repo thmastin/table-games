@@ -3,6 +3,76 @@
 **Phase:** 2
 **Status:** PENDING APPROVAL
 **Last Updated:** 2026-03-29
+**Note:** Updated 2026-03-29 — Stitch aesthetic direction incorporated.
+
+---
+
+## Section 0: Aesthetic Direction — The Grand Atrium
+
+This section establishes the creative north star for the project, derived from Stitch design output. The Stitch work was generated as a web lobby interface and is used here for aesthetic direction only — color palette, typography, surface philosophy, and animation feel. It is not a reference for layout or component structure, which are defined in later phases.
+
+### Creative Direction
+
+"The Grand Atrium" — a private high-roller lounge. Hushed atmosphere, expansive negative space, deep tonal layering, sophisticated typography. This is the opposite of noisy flashing-light casino tropes. Every decision in the visual language should be asked against this direction: does this read as a private room, or does it read as a slot floor?
+
+### Color Palette (Locked)
+
+These values are locked from the Stitch output and are the authoritative source for all color decisions in the visual language.
+
+**Backgrounds and Surfaces**
+
+| Role | Hex | Notes |
+|---|---|---|
+| Background | #121412 | Near-black, slightly warm. No gradient, no texture. |
+| Section surface | #1a1c1a | First lift off background. |
+| Interactive surface | #1e201e | Second lift. Buttons, input fields. |
+| Elevated surface | #292a28 | Third lift. Cards, chips, raised elements. |
+| Modal surface | #333533 at 60% opacity | Paired with 20px backdrop blur. |
+
+**Primary and Accent**
+
+| Role | Hex | Notes |
+|---|---|---|
+| Primary / felt | #004b3d | Emerald. The table surface color. |
+| Gold secondary | #C5A059 | Used sparingly — win states and high-value actions only. |
+| Gold tertiary | #E5C185 | Even more restrained than secondary. Highlights, chip glow. |
+
+**Text**
+
+| Role | Hex | Notes |
+|---|---|---|
+| Body / primary text | #e2e3df | Never pure white. This is the maximum brightness. |
+| Input labels | #bfc9c4 | Slightly desaturated from body text. |
+
+### Typography (Locked)
+
+**Display / Headlines:** Noto Serif — for jackpot amounts, section titles, big moments, and all felt markings. This is the personality font.
+
+**UI / Body:** Manrope — for betting odds, bankroll display, labels, navigation, action buttons.
+
+**Pairing rule:** headline-lg Noto Serif paired with title-sm Manrope in all-caps at 0.1rem letter-spacing. This combination appears wherever a heading needs visual hierarchy over a supporting label.
+
+### Surface Philosophy (Locked)
+
+**No borders.** Structure is defined through light and shadow — tonal layering between surface levels. Borders do not exist in this design language except as ghost borders.
+
+**Ghost borders:** outline_variant color at 15% opacity only. Used only when absolutely required to define a boundary that tonal contrast cannot achieve on its own. Treat as an exception, not a default.
+
+**Ambient shadows:** 32px blur, 0px offset, 8% opacity. Soft glow, not a hard cast shadow. Shadows suggest elevation, not edge.
+
+**Modals:** surface_variant at 60% opacity plus 20px backdrop blur behind the modal layer. No opaque modal backgrounds.
+
+### Animation Feel (Locked — UI Transitions Only)
+
+UI transitions: 300–500ms, eased cubic-bezier, described as "heavy and luxurious." Nothing snaps. Nothing flashes. Transitions communicate that moving between states has weight.
+
+This timing applies to UI chrome — menus, overlays, panels, and lobby navigation. Game animation timing (card deal arcs, chip travel) is governed separately by the game-feel specs in Section 2 and is not overridden by this value.
+
+### Components Direction
+
+- Icons: thin-line, 1pt stroke
+- Corner radius: 0.375rem (sharp modern, not pill-shaped)
+- Chip component: surface_container_highest background, thin gold outline at 20% opacity, glows #C5A059 on selection
 
 ---
 
@@ -99,27 +169,44 @@
 
 ### Color
 
-- DO: Use a felt color in the range #1a3a2a–#1f5c35, saturated enough to read as clearly distinct from the near-black background even in peripheral vision.
-- DO NOT: Use a felt color darker than #1a3a2a — below this threshold the felt merges with the background and loses its function as the focal surface.
-- DO: Set the background color to #0a0a0a–#0f0f0f and apply no gradient or texture. The background should recede completely.
+- DO: Use #004b3d as the primary felt color. This is locked from the Stitch palette and replaces the previously open range of #1a3a2a–#1f5c35.
+- DO NOT: Use a felt color darker than #004b3d — below this threshold the felt merges with the background and loses its function as the focal surface.
+- DO: Set the background color to #121412. This is locked from the Stitch palette and replaces the previously open range of #0a0a0a–#0f0f0f.
+- DO: Use the Stitch surface stack for all non-felt surfaces: #1a1c1a for sections, #1e201e for interactive elements, #292a28 for elevated elements. Do not invent intermediate values outside this stack.
 - DO: Apply a subtle radial vignette from table center — felt slightly brighter at center, fading toward rail — to simulate a spotlight-on-felt effect. The center brightness should not exceed 15% lightness increase over the edge felt value.
 - DO NOT: Use the same lightness value for the rail/frame and the background. The rail must read as a physical boundary between felt and floor.
 - DO: Use #2a1a0a–#3d2210 for the rail, dark mahogany tone, at least 20% lighter than the background so it reads as a separate surface.
+- DO: Use #C5A059 (gold secondary) and #E5C185 (gold tertiary) sparingly — only for win states and high-value actions. Gold is a signal, not a decoration.
+- DO NOT: Use gold (#C5A059 or #E5C185) for neutral UI elements, labels, or borders. Overuse destroys its signal value.
+- DO NOT: Use pure white (#FFFFFF) anywhere in the UI. The maximum text brightness is #e2e3df. Use #bfc9c4 for input labels and secondary text.
 
 ### Typography
 
-- DO: Select one display/serif or stylized sans-serif font for all table labels, payout text, and zone markings — applied consistently as the single non-system typeface in the suite.
-- DO NOT: Use the same font for table labels as for UI chrome (bankroll display, button labels) — these serve different purposes and should have visual hierarchy between them.
+- DO: Use Noto Serif as the display font for all table labels, payout text, zone markings, jackpot amounts, and section titles. This is locked from the Stitch palette and replaces the previously open "display/serif or stylized sans-serif" guidance.
+- DO: Use Manrope as the UI font for bankroll display, betting odds, button labels, and navigation. These two fonts are the complete typeface set — no others.
+- DO: Apply the pairing rule wherever a heading appears over a supporting label: headline-lg Noto Serif + title-sm Manrope in all-caps at 0.1rem letter-spacing.
+- DO NOT: Use the same font for table labels as for UI chrome. Noto Serif is for the game surface and big moments; Manrope is for interaction chrome.
 - DO: Render card rank glyphs (the A, K, 5, etc. on the card face) at a minimum equivalent to 28px at 1080p. This is the primary readability target.
 - DO: Use tabular/monospaced numerals for the bankroll display so the digit width does not shift as values change.
 - DO NOT: Use all-caps for card suit labels or rank labels — standard mixed case or symbol glyphs are more legible at speed.
 
-### Table Geometry
+### Surface and Border
 
-- DO: Maintain the elevated top-down perspective, approximately 60–70 degrees from horizontal. This is the established reference view for this genre and players expect it.
-- DO: Render the table rail with visible depth — a subtle bevel or drop shadow on the inner rail edge so the felt appears to sit below the rail surface, not on the same plane.
-- DO: Print standard table markings on the felt as texture — betting circle arcs, zone labels, minimum/maximum bet display — using the display font at low opacity (approximately 30–40% of the felt highlight color, not white).
-- DO NOT: Scale cards larger than approximately 9% of the table width for a single card at standard hand state. Beyond this threshold, multiple cards overlap excessively.
+- DO NOT: Use visible borders to define element boundaries. Structure is communicated through tonal layering — each surface level in the stack (#1a1c1a → #1e201e → #292a28) provides sufficient contrast to define spatial hierarchy without borders.
+- DO: Use ghost borders (outline_variant at 15% opacity) only when tonal contrast genuinely cannot define a required boundary. Treat as an exception requiring justification.
+- DO: Apply ambient shadows at 32px blur, 0px offset, 8% opacity — not hard-edged drop shadows. Shadows suggest elevation, not edge.
+- DO: Render modals with surface #333533 at 60% opacity plus 20px backdrop blur. Never an opaque modal background.
+- DO: Use 0.375rem corner radius on all interactive elements. Sharp modern — not pill-shaped.
+
+### Animation Style (UI Transitions)
+
+- DO: Animate all UI transitions (menus, overlays, panels, lobby navigation) at 300–500ms with an eased cubic-bezier curve. The feel target is "heavy and luxurious."
+- DO NOT: Use snap, pop, or sub-200ms transitions for UI chrome — fast transitions read as cheap and break the atrium atmosphere.
+- DO: Apply the 300–500ms UI transition timing to the lobby-to-table sit-down transition, which is also a UI state change.
+- DO: Implement all card and chip animations using Godot's Tween system with named easing curves defined in the visual language spec. No hardcoded durations in component code.
+- DO: Honor the reduced-motion toggle (from product-decisions.md Q5) by replacing all arc/travel animations with immediate placement at final position. State changes still occur — only the travel is removed.
+- DO NOT: Make any animation during a hand non-interruptible for longer than 400ms. If the player clicks a game action during an animation, the animation should complete or skip to final state within one frame on the next input event.
+- DO: Stagger multi-card deals — each card's animation starts 80–100ms after the previous card's animation starts, not after it completes. This matches the rhythm of a real deal while keeping total deal time reasonable.
 
 ### Card Presentation
 
@@ -130,21 +217,22 @@
 - DO: Render a drop shadow under each card — approximately 4px blur, 2px vertical offset, 25% black opacity — that updates as cards stack to simulate increasing height.
 - DO NOT: Allow card backs and card faces to use different drop shadow values — shadow consistency is what makes the stack read as a coherent physical pile.
 
+### Table Geometry
+
+- DO: Maintain the elevated top-down perspective, approximately 60–70 degrees from horizontal. This is the established reference view for this genre and players expect it.
+- DO: Render the table rail with visible depth — a subtle bevel or drop shadow on the inner rail edge so the felt appears to sit below the rail surface, not on the same plane.
+- DO: Print standard table markings on the felt as texture — betting circle arcs, zone labels, minimum/maximum bet display — using Noto Serif at low opacity (approximately 30–40% of the felt highlight color, not white).
+- DO NOT: Scale cards larger than approximately 9% of the table width for a single card at standard hand state. Beyond this threshold, multiple cards overlap excessively.
+
 ### Chip Behavior
 
 - DO: Render chips as physical circular objects with visible edge detail (alternating color segments on the rim) and a subtle top-surface highlight suggesting a convex form.
+- DO: Use surface_container_highest as the chip background, with a thin gold outline at 20% opacity. On selection, glow the chip with #C5A059.
 - DO: Animate chip placement as a drop arc from the chip tray to the betting zone. Arc peak should reach approximately 20px above the table surface at mid-travel. Total duration 180–240ms with ease-out.
 - DO NOT: Animate chip placement using a scale pop (scale from 0 to 1 in place) — this reads as a UI appearance, not a physical placement.
 - DO: Visually stack chips when multiple chips occupy the same betting zone — each additional chip renders offset 3–4px upward from the previous, creating a visible stack with proportional height increase.
 - DO: On win resolution, animate chips sliding from dealer area toward player betting zone. On loss, animate chips sliding away from player zone toward dealer area. Duration 300–400ms.
 - DO NOT: Resolve wins and losses by incrementing a counter display — chip movement is the resolution animation.
-
-### Animation Style
-
-- DO: Implement all card and chip animations using Godot's Tween system with named easing curves defined in the visual language spec. No hardcoded durations in component code.
-- DO: Honor the reduced-motion toggle (from product-decisions.md Q5) by replacing all arc/travel animations with immediate placement at final position. State changes still occur — only the travel is removed.
-- DO NOT: Make any animation during a hand non-interruptible for longer than 400ms. If the player clicks a game action during an animation, the animation should complete or skip to final state within one frame on the next input event.
-- DO: Stagger multi-card deals — each card's animation starts 80–100ms after the previous card's animation starts, not after it completes. This matches the rhythm of a real deal while keeping total deal time reasonable.
 
 ### Sound Triggers
 
@@ -160,6 +248,7 @@
 - DO NOT: Place floating tooltip overlays on the felt during a hand — if contextual information is needed, it belongs in a fixed panel, not overlaid on the game surface.
 - DO: Display the rules/payout reference (from product-decisions.md Q7) as a full-screen dismissible overlay, not a slide-out panel that covers part of the table.
 - DO: Use icon-plus-label buttons for primary game actions (Hit, Stand, Double, Split, Surrender) at all times — never icon-only. These actions have real consequences and must be unambiguous.
+- DO: Use thin-line icons (1pt stroke) throughout all UI chrome — no filled or heavy-weight icon styles.
 
 ### Information Hierarchy
 
@@ -171,7 +260,7 @@
 
 - DO: Use a brief screen-edge color pulse on win — a subtle green bloom at the viewport edge lasting 400–600ms — in addition to chip movement. Do not use a full-screen overlay.
 - DO NOT: Use a modal dialog or blocking overlay for standard win/loss outcomes. Reserve modal states for significant events only (player broke, session end, error).
-- DO: Display the win amount as a floating numeral that animates from the resolution point to the bankroll display over 400–500ms, then merges into the bankroll counter.
+- DO: Display the win amount as a floating numeral in Noto Serif that animates from the resolution point to the bankroll display over 400–500ms, then merges into the bankroll counter. The numeral should use #C5A059 (gold secondary) to signal the win state.
 
 ### Navigation Between Tables
 
@@ -193,17 +282,19 @@ These questions are raised by this research but cannot be answered without seein
 
 4. **Rail depth rendering approach.** The rail bevel can be achieved through a sprite with pre-baked lighting, a Godot CanvasItem shader, or a layered sprite approach. The choice must be made before Phase 4 defines whether the rail is a shared component or game-specific geometry.
 
-5. **Printed table marking opacity and color.** The Do/Don't list specifies 30–40% opacity felt-highlight color for felt markings, but the exact color relationship to the felt base needs to be locked in the visual language. Too light and they vanish; too dark and they compete with cards.
+5. **Printed table marking opacity and color.** The Do/Don't list specifies 30–40% opacity felt-highlight color for felt markings using Noto Serif. The exact color relationship to the felt base (#004b3d) needs to be locked in the visual language. Too light and they vanish; too dark and they compete with cards.
 
 6. **Chip denomination set for MVP.** Product decisions lock three table tiers (Low: $5–$100, Standard: $25–$500, High: $100–$1000). The chip denominations needed to cover these tiers span at least $5, $25, $100, $500. Does the $500 chip get a unique color, or does it reuse an existing convention (purple is common in real casinos)? This must be decided before the chip component is specced.
 
 7. **Action button layout during split hands.** When a player splits in Blackjack, two simultaneous hands are active and the action buttons must address one hand at a time. The spatial layout of two card zones plus action buttons has not been defined. Does the active hand move to a canonical position, or do action buttons relocate toward the active hand? This is a Phase 8 design question but has Phase 4 component boundary implications.
 
-8. **Lobby / table selection screen.** The research covers the table surface in detail, but the lobby (game selection, table tier selection) has no established visual language. Is the lobby a continuation of the casino floor environment (same dark ambient palette, felt-surfaced cards representing each game), or is it a more conventional menu UI? Phase 3 must address this or leave it as a known gap.
+8. **Lobby / table selection screen.** The research covers the table surface in detail, but the lobby (game selection, table tier selection) has no established layout or component structure. The Stitch output provides aesthetic direction but was generated as a web interface and does not translate directly to a Godot desktop lobby. Phase 3 must define the lobby layout independently using the Grand Atrium palette and type system.
 
-9. **Typography loading on Linux.** The decision to use a single display font requires verifying that the chosen font either ships with the Godot binary, is embedded as a project asset, or is reliably available on target Linux distributions. System font fallback behavior on Arch vs. Ubuntu vs. other distros is unpredictable and must be resolved before the font is locked.
+9. **Typography loading on Linux.** Noto Serif and Manrope are now locked as the typeface pair. Both must be embedded as project assets in the Godot binary — do not rely on system font availability. Verify that both fonts are licensed for embedding and that the Godot font import pipeline handles both correctly before Phase 3 proceeds.
 
-10. **Camera approach animation and table geometry reveal.** The sit-down transition (camera approach) requires knowing what surrounds the table during the animation. If the background is pure black, the approach is trivial. If there is environmental context (other tables visible, floor texture, ceiling lights), that environment must be designed before the transition can be animated. Phase 3 needs to make a binary call: pure environment (black surround, table only) or implied casino floor.
+10. **Camera approach animation and table geometry reveal.** The sit-down transition (camera approach) requires knowing what surrounds the table during the animation. If the background is pure black (#121412), the approach is trivial. If there is environmental context (other tables visible, floor texture, ceiling lights), that environment must be designed before the transition can be animated. Phase 3 needs to make a binary call: pure environment (#121412 surround, table only) or implied casino floor. The Grand Atrium direction (negative space, deep tonal layering) suggests the pure environment approach is consistent with the aesthetic, but this must be confirmed by the developer.
+
+11. **Gold accent threshold in context.** The rule is that gold (#C5A059, #E5C185) is used only for win states and high-value actions. "High-value action" needs a concrete definition before component work begins. Candidates: only the Deal button when a non-zero bet is placed? The highest-denomination chip? All primary CTA buttons? A permissive reading will pollute the signal; a restrictive reading may make the UI feel cold. Phase 3 must produce an exhaustive list of every element that qualifies before the component spec is written.
 
 ---
 
