@@ -45,7 +45,7 @@ Browser-based casino table games suite built to feel premium and intentional.
 Full phase-by-phase workflow: `docs/workflow.md`
 Current phase and gate history: `docs/progress.md`
 
-**Current status:** Phase 5 APPROVED — technical architecture locked. Phase 6 not yet started.
+**Current status:** Phase 6 APPROVED — Blackjack game spec locked. Phase 7 not yet started.
 
 ## Slash Commands
 
@@ -87,3 +87,4 @@ When a mistake is made or a correction is given:
 | `visual-language.md` | Phase 3 output: single source of truth for all visual values | Ready |
 | `component-boundaries.md` | Phase 4 output: shared vs. game-specific component rules | Ready |
 | `technical-architecture.md` | Phase 5 output: state, data flow, persistence model | Ready |
+| `blackjack/game-spec.md` | Phase 6 output: Blackjack rules, edge cases, side bets | Ready |

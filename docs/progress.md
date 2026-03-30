@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 6 — Blackjack Game Spec (not yet started)
+Phase 7 — Blackjack Technical Architecture (not yet started)
 
 ## Gate History
 
@@ -15,10 +15,11 @@ Phase 6 — Blackjack Game Spec (not yet started)
 | Phase 3 — Visual Language | APPROVED | 2026-03-29 | Card back: Option B (chevron+seal). Chip: Option A (classic full-face). Table surface: Option B (directional grain+bevel). |
 | Phase 4 — Component Boundaries | APPROVED | 2026-03-29 | 13 shared components, logic layer boundary rules, Rank enum locked, joker support documented as known future item. |
 | Phase 5 — Technical Architecture | APPROVED | 2026-03-30 | GlobalState autoload + scene-local split, FileAccess JSON persistence, 60fps/4s/150MB baseline, folder structure locked. |
+| Phase 6 — Blackjack Game Spec | APPROVED | 2026-03-30 | 6-deck, dealer stands soft 17, late surrender, 3:2. TriLux + Lucky Lucky side bets. SideBetResolution phase added. |
 
 ## Pending Decisions
 
-None — ready for Phase 6.
+None — ready for Phase 7.
 
 ## Games Status
 
