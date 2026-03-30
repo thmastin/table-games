@@ -947,7 +947,7 @@ The hole card is not visible and is not used for side bet evaluation.
 3. Display result banners for each placed side bet (win or lose).
 4. Phase transitions out of `SideBetResolution` per state transition rules.
 
-**No player input occurs during `SideBetResolution`.** The phase is automatic. Results are shown briefly (duration: same as deal animation cadence), then the phase transitions. No button is enabled during this phase.
+**No player input occurs during `SideBetResolution`.** The phase is automatic. Results are shown briefly (duration: same as deal animation cadence), then the phase transitions. No button is enabled during this phase. Exception: if TriLux wins and `DealerTipEnabled == true`, the Lucky George tip prompt is shown and awaits player input (or auto-timeout). This is the only player input permitted during `SideBetResolution`. All other game controls (hit, stand, chip tray, etc.) remain locked for the duration of the phase.
 
 **Dealer blackjack during SideBetResolution:** The dealer's hole card has not been checked during `SideBetResolution`. If the dealer up-card is a 10-value card, the peek for blackjack has not yet occurred. Side bets resolve using only the three visible cards. Dealer blackjack check occurs after `SideBetResolution` exits, exactly as it does when no side bets are placed.
 
