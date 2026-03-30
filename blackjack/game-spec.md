@@ -872,7 +872,7 @@ This section maps game rules to the `GamePhase` state machine defined in `techni
 | `Dealing` | `PlayerTurn` | Initial deal complete, no side bets placed, dealer up-card is 10-value card, peek confirmed no blackjack |
 | `Dealing` | `Resolution` | Initial deal complete, no side bets placed, dealer has blackjack (10-value up-card, peek confirmed blackjack) |
 | `SideBetResolution` | `InsurancePrompt` | Side bets resolved, dealer up-card is Ace |
-| `SideBetResolution` | `PlayerTurn` | Side bets resolved, dealer up-card is not Ace (or 10-value peek confirmed no blackjack) |
+| `SideBetResolution` | `PlayerTurn` | Side bets resolved, dealer up-card is not Ace (or 10-value peek confirmed no blackjack) [^peek-inline] |
 | `SideBetResolution` | `Resolution` | Side bets resolved, dealer has blackjack confirmed (10-value up-card, peek confirmed blackjack) |
 | `InsurancePrompt` | `PlayerTurn` | Insurance decision made, dealer does not have blackjack, player does not have blackjack |
 | `InsurancePrompt` | `Resolution` | Insurance decision made, dealer does not have blackjack, player has blackjack (no player action possible — skip PlayerTurn) |
@@ -888,6 +888,8 @@ This section maps game rules to the `GamePhase` state machine defined in `techni
 **Invalid transitions:** Any transition not in the table above is invalid. The state machine must reject invalid transitions with an error log and no state change.
 
 **Side bet + dealer Ace ordering note:** When the dealer shows an Ace AND at least one side bet was placed, the sequence is `Dealing` → `SideBetResolution` → `InsurancePrompt`. Side bets pay or lose in `SideBetResolution` before insurance is offered. The dealer does not peek for blackjack during `SideBetResolution` — the peek occurs as part of the `InsurancePrompt` resolution, as it always does. This means side bets resolve before the dealer's hole card is known.
+
+[^peek-inline]: When the dealer up-card is a 10-value card, the peek executes inline as part of `SideBetResolution` exit logic (not a separate phase or transition). The peek result routes to `PlayerTurn` (no blackjack) or `Resolution` (blackjack confirmed). No intermediate state exists between `SideBetResolution` and either destination.
 
 ---
 
