@@ -1107,7 +1107,7 @@ The complete sequence for `SideBetResolution` phase:
    b. Run TriLux evaluation algorithm (16.3).
    c. If win: call `GlobalState.ApplyBankrollDelta(TriLuxBet + TriLuxBet * multiplier)`. Display TriLux win banner with pay amount.
    d. If lose: display TriLux lose banner. No bankroll delta.
-   e. If win and `DealerTipEnabled == true`: show "Tip Dealer" button. Wait for player action or auto-timeout (see 16.3.1). Resolve tip.
+   e. If win and `DealerTipEnabled == true`: show "Tip Dealer" button. Wait for player action or auto-timeout (see 16.3.1). Resolve tip. Lucky Lucky evaluation (step 3) does not begin until the tip prompt has resolved — either by player action or auto-timeout. Steps 2 and 3 are strictly sequential.
 3. **Lucky Lucky evaluation (if LuckyLuckyBet > 0):**
    a. Same three cards as above.
    b. Run Lucky Lucky evaluation algorithm (16.4).
