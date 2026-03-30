@@ -656,6 +656,11 @@ These components are intentionally NOT shared during Blackjack and UTH developme
 | `ChipWinSlide` / `ChipLossSlide` animation logic | Inside game scene scripts | Win/loss chip movement is triggered by game scenes, not a component. The animation spec is identical across games (350ms, straight slide), but the source and destination positions are game-specific. | After three games have identical chip resolution animation with only position differences, extract an `AnimateChipResolution` utility (not a scene — a static helper class) into `res://shared/utils/`. |
 | `UTHShowdownDisplay.tscn` | `res://games/uth/` | Showdown display with hand-rank labels and blind pay table is UTH-specific now. Mississippi Stud and Three-Card Poker have showdown displays but with different hand ranks and different pay tables. | Two games share a showdown display structure that can be expressed purely as data props (pay table array, hand rank labels array). At that point, extract a generic `ShowdownDisplay.tscn` with a pay table prop. |
 
+### Known Future Items (not in scope, tracked here)
+
+**Joker / non-standard deck support**
+When a game requiring jokers is added, three files require changes: Card.cs (add Joker to Rank enum), Deck.cs (construction logic), CardFace.tscn (render path for joker face). Every hand evaluator will surface unhandled Rank.Joker cases via compiler error if the Rank enum is in place. The Suit field (currently string) may also need to become an enum at that point.
+
 ---
 
 ## 6. Logic Layer Boundary
@@ -698,6 +703,30 @@ res://shared/
 ```
 
 The NUnit test project references only `res://games/[game]/logic/` and `res://shared/logic/`. It does not reference any `.tscn` file or any C# class that inherits from a Godot type.
+
+---
+
+### Card.cs
+
+**What it is:** The shared card value object. Plain C#, no Godot types. Used by every game's logic layer.
+
+**Type contract:**
+
+```csharp
+public class Card
+{
+    public Rank Rank { get; }
+    public string Suit { get; }   // "clubs" | "diamonds" | "hearts" | "spades"
+}
+```
+
+**Rank must be defined as a C# enum (not int):**
+
+```csharp
+public enum Rank { Ace = 1, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King }
+```
+
+Rationale: when joker or non-standard card support is added, the compiler surfaces every unhandled case automatically. A raw int allows silent out-of-range values.
 
 ---
 
