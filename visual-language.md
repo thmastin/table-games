@@ -268,11 +268,16 @@ Immediately follows the deal arc, applied to each card on landing.
 
 ## 4. Component Options
 
+All choices locked 2026-03-29.
+
 The developer must choose one option per pair before Phase 4 begins. No default is recommended — both options are valid for this aesthetic.
 
 ---
 
 ### Card Back Design
+
+NOT SELECTED: Option A
+SELECTED: Option B
 
 **Option A: Lattice Diamond**
 A repeating diamond lattice pattern in two tones of deep emerald. The diamond grid uses `color_felt` (#004b3d) as the background and a fine 1px line grid in a 15%-lightened version of the felt (#007a62). A thin gold border frame — 2px, `color_gold` (#C5A059) at 60% opacity — runs 6px inside the card edge. The overall impression is a premium geometric card stock that references casino green without being a felt swatch. No logo, no central motif. Pattern scale: diamond cells are 8px wide at base card size.
@@ -286,6 +291,9 @@ A diagonal chevron stripe pattern running at 45 degrees, using `color_surface_hi
 
 ### Chip Style
 
+SELECTED: Option A
+NOT SELECTED: Option B
+
 **Option A: Classic Casino Inlay**
 Circular chip with a flat face. Background fill uses the denomination's base color (see chip color tokens). The chip edge features 8 alternating segments — 4 in the base color, 4 in a 30%-lightened version of the base color — each segment is 12px wide at standard chip diameter. Center face has a thin gold ring inlay at 80% radius — 1px stroke, `color_gold_light` (#E5C185) at 50% opacity — and the denomination numeral rendered in `text_base` (16px) Manrope SemiBold at `color_text_primary` (#e2e3df). No texture, no emboss — flat face with the inlay ring. Top surface has a single radial highlight: a soft white ellipse at 40% opacity in the upper-left quadrant, 24px wide, to suggest a convex dome surface.
 
@@ -297,6 +305,9 @@ Exception: $100 chip (near-black rim on #292a28 center). Apply a 1px inner highl
 ---
 
 ### Table Surface Treatment
+
+NOT SELECTED: Option A
+SELECTED: Option B
 
 **Option A: Subtle Noise Texture with Radial Vignette**
 The felt surface uses a tileable noise texture asset (512x512px tileable PNG) blended over the base `color_felt` (#004b3d) at 8% opacity in Multiply blend mode. This approximates felt pile variation at minimal GPU cost. A radial gradient vignette is applied over the texture: table center is 12% brighter than `color_felt`, edges fade back to exact `color_felt` value. Felt markings (betting arcs, zone labels) are rendered as flat `color_felt_marking` (#007a62 at 35% opacity) text and vector shapes with no additional texture. Rail is a solid `color_rail` (#3d2210) band with a 4px inner shadow (inward, toward felt, 8% black opacity) on its felt-facing edge to suggest depth — as if the felt surface sits in a recessed inlay.
