@@ -532,8 +532,8 @@ Every edge case is listed here. No "standard rules apply" shortcuts.
 
 ### 9.6 Split to One Card, Then Dealer Has Blackjack
 
-- Player splits. Each split hand receives one card. Before player acts (or as player acts), dealer checks for blackjack. Wait — the peek rule fires before player action even begins (see 5.3).
-- Correct sequence: the peek check always happens before `PlayerTurn`. If dealer has blackjack, the hand resolves immediately. Splits never occur before the peek. Splits occur during `PlayerTurn`, which only begins after a confirmed non-blackjack peek. Therefore: if dealer has blackjack, the player never reaches the split decision. Split-then-dealer-blackjack cannot occur in this flow.
+- This scenario cannot occur by construction. The peek (Section 5.3) always completes before `PlayerTurn` begins. Splits are only available during `PlayerTurn`.
+- When the dealer has a 10-value up-card and peek confirms blackjack, the hand resolves immediately at the `Dealing` → `DealerBlackjack` transition. The player never reaches a split decision. There is no split-then-dealer-blackjack path in this flow.
 
 ### 9.7 Bust on a Doubled Hand
 
