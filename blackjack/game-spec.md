@@ -917,6 +917,7 @@ Side bets are placed during the `Betting` phase alongside the main bet. The foll
 - Maximum side bet: same as the table's maximum main bet (see Section 12 for tier values).
 - Each side bet is a single flat amount, not a chip stack. The player selects the amount from the same chip denominations available for the main bet.
 - `TriLuxBet` and `LuckyLuckyBet` are each set to exactly the chosen denomination. They are not accumulating chip stacks — one placement sets the value.
+- If the player clicks a chip denomination when a side bet is already placed, the existing value is replaced with the new denomination. The previous amount is returned to the bankroll and the new amount is deducted. This matches the single-placement model — there is no chip stack accumulation on side bets.
 
 **Locking:**
 - Side bets lock when the main bet locks (Deal button pressed, `DealInitiated` transition fires).
@@ -990,6 +991,8 @@ All other three-card combinations do not win. They lose.
 
 **Straights:** Three consecutive ranks. Ace may be high (A-2-3... no — see below) or low. Ace counts as 1 for low straights (A-2-3) and as the high card for high straights (Q-K-A). Ace may not wrap around (K-A-2 is not a straight). Valid straight sequences: A-2-3, 2-3-4, 3-4-5, 4-5-6, 5-6-7, 6-7-8, 7-8-9, 8-9-10, 9-10-J, 10-J-Q, J-Q-K, Q-K-A.
 
+For straight evaluation, Ace (rank value 1 per Section 2.3) also serves as rank 14 to complete a Q-K-A sequence. Ace does not wrap — K-A-2 is not a valid straight. The only valid straight sequences involving Ace are A-2-3 (Ace as rank 1) and Q-K-A (Ace as rank 14).
+
 **Flush:** All three cards share the same suit (clubs, diamonds, hearts, or spades). Rank is irrelevant for flush determination.
 
 **Straight flush:** Satisfies both the straight condition and the flush condition simultaneously. Always evaluated as straight flush (rank 1), not as a separate straight or flush.
@@ -1022,8 +1025,8 @@ When TriLux wins (any winning outcome), a "Tip Dealer" button is shown in the UI
 2. "Tip Dealer" button appears alongside a dismiss affordance ("No Thanks" or equivalent close action).
 3. Player has two options:
    - Press "Tip Dealer": the tip amount is recorded in `history.json` as a `DealerTip` event. `GlobalState.ApplyBankrollDelta(-1)` is called (tip deducted from bankroll). The button disappears. Phase transition proceeds.
-   - Press dismiss or take no action within the transition window: no tip recorded, no bankroll change. Phase transition proceeds.
-4. The phase does not wait indefinitely. If the player does not interact within the result display duration, the dismiss path is taken automatically.
+   - Press dismiss or take no action: no tip recorded, no bankroll change. Phase transition proceeds.
+4. The tip prompt auto-dismisses after 5 seconds if the player does not interact. The dismiss path is taken automatically and the hand continues. The 5-second timeout is a constant (`TipPromptTimeoutSeconds = 5`) defined in `GameConfig.cs`.
 
 **v1 behavior:** The tip is display-only in the sense that it does not affect main-hand bankroll math. It is a real bankroll deduction of $1. The tip is optional. It is off by default — the feature is shown (button is present) but the player must actively press it to tip.
 
