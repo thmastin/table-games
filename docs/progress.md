@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 7 — Blackjack Technical Architecture (not yet started)
+Phase 8 — Blackjack Visual Design (not yet started)
 
 ## Gate History
 
@@ -16,10 +16,11 @@ Phase 7 — Blackjack Technical Architecture (not yet started)
 | Phase 4 — Component Boundaries | APPROVED | 2026-03-29 | 13 shared components, logic layer boundary rules, Rank enum locked, joker support documented as known future item. |
 | Phase 5 — Technical Architecture | APPROVED | 2026-03-30 | GlobalState autoload + scene-local split, FileAccess JSON persistence, 60fps/4s/150MB baseline, folder structure locked. |
 | Phase 6 — Blackjack Game Spec | APPROVED | 2026-03-30 | 6-deck, dealer stands soft 17, late surrender, 3:2. TriLux + Lucky Lucky side bets. SideBetResolution phase added. |
+| Phase 7 — Blackjack Technical Architecture | APPROVED | 2026-03-30 | 31 state transitions, Tween+AnimationPlayer animation system, all 12 shared components integrated, SideBetResolution phase fully specced. |
 
 ## Pending Decisions
 
-None — ready for Phase 7.
+None — ready for Phase 8.
 
 ## Games Status
 

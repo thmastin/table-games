@@ -472,7 +472,7 @@ Every animatable event is listed below. Duration values come from `visual-langua
 
 ## 5. Integration Points — Shared Components
 
-This section specifies exactly how each of the 13 shared components is used by Blackjack. For each component: whether it is used, how it is instantiated, what signals Blackjack listens to, and what props/state it receives.
+This section specifies exactly how each of the 12 shared components is used by Blackjack. For each component: whether it is used, how it is instantiated, what signals Blackjack listens to, and what props/state it receives.
 
 ---
 
