@@ -60,6 +60,7 @@ All hex values are locked from the Stitch design output and ux-research.md. No n
 | Push state | `color_push` | #bfc9c4 | Secondary text color. Neutral — neither win nor loss. |
 | Error | `color_error` | #ffb4ab | Used only for system errors and invalid bet states. Not used in game resolution. Muted rose per stitch-design.md — intentional departure from saturated alarm red to stay within Grand Atrium tonality. |
 | Ghost border | `color_ghost_border` | #89938f | Applied at 15% opacity only. Exception, not default. |
+| Card suit red | `color_suit_red` | #cc2222 | Standard casino convention red for hearts and diamonds on card faces. Distinct semantic role from `color_error` (muted rose). Legible on `color_surface_high` card face background. Not used for any purpose other than card suit rendering. |
 
 ### Chip Colors by Denomination
 
@@ -210,6 +211,12 @@ Immediately follows the deal arc, applied to each card on landing.
 | Interruptibility | Yes — snap to betting zone final position within one frame on input |
 | Reduced-motion fallback | Chip appears at betting zone immediately. No arc. |
 
+#### Card Resting Rotation
+
+| Property | Token Name | Value |
+|---|---|---|
+| Maximum random resting rotation | `card_resting_rotation_max` | 2° | Applied as a randomized offset in the range [-2°, +2°] by `PlayerHandZone.cs` when positioning each dealt card at its final resting position. Conveys physical naturalism without compromising readability. Applied after the settle animation completes. |
+
 #### Chip Stack Offset
 
 | Property | Value |
@@ -340,6 +347,21 @@ The felt surface uses two layered elements: a base `color_felt` (#004b3d) fill, 
 ### Corner Radius
 
 **Single value — 6px** (equivalent to 0.375rem at 16px base). Applied to all interactive elements: buttons, input fields, chip tray, card zones, panels, modals. Not applied to the table surface itself or the rail.
+
+### Opacity Tokens
+
+Named opacity values for recurring use cases. All interactive element opacity in disabled or semi-active states must reference these tokens — no bare percentages in component specifications.
+
+| Token Name | Value | Usage |
+|---|---|---|
+| `opacity_disabled_primary` | 60% | Disabled state for primary interactive elements (Deal button gold accent, Clear Bet button surface). Retains legibility and physical presence while clearly signaling non-interactivity. |
+| `opacity_disabled_secondary` | 40% | Disabled state for secondary interactive elements (game action buttons: Hit, Stand, Double, Split, Surrender; unaffordable chip tray denominations; inactive side bet zone labels). More aggressively dimmed than primary — these are not the highest-priority affordances. |
+| `opacity_disabled_content` | 40% | Text and icon opacity within a disabled primary button (e.g., `color_background` label text inside the disabled Deal button). Applied to the button's content independently of the surface opacity. |
+| `opacity_chip_hover_glow` | 20% | Hover glow on unselected, affordable chips in the ChipTray. Lower than the selection glow (40%) to preserve hierarchy between hover and selected states. |
+| `opacity_side_bet_banner_fill` | 80% | `color_surface_high` fill opacity on SideBetResultBanner win state. Elevated surface presence without fully opaquing over the table. |
+| `opacity_side_bet_banner_border` | 40% | `color_gold` border opacity on SideBetResultBanner win state. Subordinate gold presence — signals win without competing with the win numeral float. |
+| `opacity_split_active_underlay` | 15% | `color_gold` underlay behind the active hand zone in split layout. Ambient signal only — not a border, not a fill. |
+| `opacity_tip_prompt_fill` | 90% | `color_surface` fill opacity on TipPrompt background. Near-opaque panel that clearly belongs to the UI layer while not being fully flat. |
 
 ### Card Dimensions
 

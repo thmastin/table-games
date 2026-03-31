@@ -75,12 +75,12 @@ These elements are present in every screen state and are not repeated in each st
 ### Active / Highlighted
 
 - None. No interactive element is highlighted at rest.
-- ChipTray denominations: all denominations within bankroll affordability lit at `color_text_primary`. Unaffordable denominations dimmed at 40% opacity.
+- ChipTray denominations: all denominations within bankroll affordability lit at `color_text_primary`. Unaffordable denominations dimmed at `opacity_disabled_secondary` (40%).
 
 ### Dimmed / Inactive
 
-- Deal button: `IsGoldAccent = true` but `IsEnabled = false`; rendered at 60% opacity of gold accent style.
-- Clear Bet button: `IsEnabled = false`; 60% opacity.
+- Deal button: `IsGoldAccent = true` but `IsEnabled = false`; rendered at `opacity_disabled_primary` (60%) of gold accent style.
+- Clear Bet button: `IsEnabled = false`; `opacity_disabled_primary` (60%) opacity.
 - BetSpot (main bet): `IsActive = false`; no pointer cursor; stack is empty.
 - SideBetZone spots (TriLux, LuckyLucky): `IsActive = false`; labels still visible as felt markings.
 - Action buttons (Hit, Stand, Double, Split, Surrender): not rendered. BlackjackActionPanel hides all game-action buttons during Idle phase.
@@ -111,7 +111,7 @@ All fixed elements plus:
 
 ### Active / Highlighted
 
-- ChipTray: all affordable denominations fully lit. Selected denomination chip glows with `color_gold` at 40% opacity, 8px blur radius.
+- ChipTray: all affordable denominations fully lit. Selected denomination chip glows with `color_gold` at 40% opacity (visual-language.md Section 5 `Selection glow opacity`), 8px blur radius.
 - MainBetSpot: `IsActive = true`; pointer cursor active over felt arc zone.
 - TriLuxBetSpot: `IsActive = true` when MainBet > 0.
 - LuckyLuckyBetSpot: `IsActive = true` when MainBet > 0.
@@ -220,8 +220,8 @@ All fixed elements, all cards at dealt positions (hole card face-down), plus:
 | InsuranceBetPrompt modal | InsuranceBetPrompt.tscn [BJ-specific] | (720, 440) | 480 x 200 | `color_surface_modal`; `transition_modal_enter` (450ms) |
 | Prompt heading | Inside InsuranceBetPrompt | (960, 440) centered | — | Noto Serif `text_xl`; `color_text_primary`; "Insurance?" |
 | Insurance amount label | Inside InsuranceBetPrompt | (960, 510) centered | 360 x 28 | Manrope `text_base`; `color_text_secondary`; "Costs $[half of MainBet]"; dynamically bound to `floor(MainBet / 2)` |
-| TAKE INSURANCE button | Inside InsuranceBetPrompt | (750, 578) | 200 x 52 | ActionButton.tscn [shared]; "TAKE INSURANCE" label; `IsEnabled = true`; not gold accent |
-| DECLINE button | Inside InsuranceBetPrompt | (970, 578) | 200 x 52 | ActionButton.tscn [shared]; "DECLINE" label; `IsEnabled = true`; not gold accent |
+| TAKE INSURANCE button | Inside InsuranceBetPrompt | (752, 578) | 200 x 52 | ActionButton.tscn [shared]; "TAKE INSURANCE" label; `IsEnabled = true`; not gold accent; `space_4` (16px) gap to DECLINE button |
+| DECLINE button | Inside InsuranceBetPrompt | (968, 578) | 200 x 52 | ActionButton.tscn [shared]; "DECLINE" label; `IsEnabled = true`; not gold accent |
 | MainBetSpot chip stack | BetSpot / ChipStack | (960, 700) | 88 x 80 | Visible but inactive |
 
 ### Active / Highlighted
@@ -248,7 +248,7 @@ All fixed elements, plus:
 
 | Element | Component | Position (x, y) | Size (w x h) | Notes |
 |---|---|---|---|---|
-| Player card fan (2+ cards) | PlayerHandZone / CardFace nodes | (960, 820) zone center | 80 x 112 per card | 28px horizontal offset per additional card; slight ±2° rotation per card |
+| Player card fan (2+ cards) | PlayerHandZone / CardFace nodes | (960, 820) zone center | 80 x 112 per card | 28px horizontal offset per additional card; slight rotation per card in range ±`card_resting_rotation_max` (±2°) |
 | Dealer card fan (2 cards) | DealerHandZone / CardFace nodes | (960, 260) zone center | 80 x 112 per card | Card 1 face-up; Card 2 face-down (hole card) |
 | Player HandTotalBadge | PlayerHandZone / HandTotalBadge | (960, 752) | — | Noto Serif `text_display_sm` (36px); `color_text_primary`; centered above card fan |
 | Dealer upcard label (rank only, no total) | DealerHandZone / HandTotalBadge | Hidden | — | DealerTotalBadge is hidden during PlayerTurn; hole card value is unknown |
@@ -271,7 +271,7 @@ This ordering places the most consequential destructive action (Surrender) at to
 ### Active / Highlighted
 
 - Enabled action buttons: full opacity, `color_surface` fill, `color_text_primary` label, `color_text_secondary` icon; hover state: `color_surface_high` fill, `color_text_primary` icon.
-- Disabled action buttons: 40% opacity, no hover response.
+- Disabled action buttons: `opacity_disabled_secondary` (40%), no hover response.
 
 ### Dimmed / Inactive
 
@@ -301,12 +301,12 @@ Horizontal separation between hand zone centers: 300px. This gives each hand a 2
 
 The active hand (`ActiveHandIndex`) is indicated by:
 - HandTotalBadge shown at full `color_text_primary` opacity.
-- A subtle `color_gold` at 15% opacity highlight behind the active hand zone cards (not a border — an ambient underlay).
+- A subtle `color_gold` at `opacity_split_active_underlay` (15%) highlight behind the active hand zone cards (not a border — an ambient underlay).
 - Action buttons in the right chrome panel remain in the same positions; they now control the active hand only.
 
 ### Inactive Hand
 
-- HandTotalBadge shown at 60% opacity (`color_text_secondary`).
+- HandTotalBadge shown at `opacity_disabled_primary` (60%) (`color_text_secondary`).
 - No gold underlay.
 - Cards still visible.
 
@@ -363,6 +363,21 @@ Four hand zones at minimum safe spacing.
 Horizontal separation: 213px per zone. At this density, card overlap within each hand is unchanged (28px per card); only zone separation narrows. Zone width per hand: ~130px usable.
 
 Note: At 4-hand split with multiple hit cards per hand, each hand's fan may extend beyond the 130px budget. The fan expands rightward without clipping; adjacent zones' left edges must maintain at least `space_6` (24px) clearance from a neighboring fan's right edge. This is a layout constraint, not a visual decision — it is flagged here for the developer's attention during implementation.
+
+---
+
+## State 9b: Split Resolution — Mixed Outcomes (note)
+
+This is not a distinct `GamePhase` value. It is a rendering behavior that applies during `Resolution` when `PlayerHands.Length >= 2` and the hands have divergent outcomes (e.g., Hand 0 wins, Hand 1 loses).
+
+**Key behaviors:**
+- Chip animations resolve left to right, one hand at a time. Each hand's animation completes before the next begins.
+- Win numeral floats fire per winning hand, sequentially, each originating at that hand's MainBetSpot.
+- The push indicator (if any hand pushes) renders at the respective hand zone center, not the global (960, 480) center.
+- The screen-edge bloom fires once after all hand animations complete, only if at least one hand won.
+- BankrollDisplay updates incrementally per hand delta, not as a lump sum.
+
+Full animation sequencing spec is in `annotations.md` Section 21b.
 
 ---
 
@@ -457,6 +472,54 @@ All fixed elements, all cards at final positions, plus:
 |---|---|---|---|---|
 | Push indicator | ResultBanner.tscn [shared] | (960, 480) centered over felt | — | `color_push` (`color_text_secondary`); Manrope `text_base`; "PUSH"; appears via `transition_panel_enter` (400ms); no float travel |
 | Chip return (push) | ChipStack stays in place | MainBetSpot | — | Chips are not animated away; they remain for the next bet state |
+
+---
+
+## State 13b: Resolution — Surrender
+
+**GamePhase:** `Resolution`, `HandOutcome.Surrender`
+**Description:** Player chose to surrender during PlayerTurn. Half of MainBet is returned immediately at the time the Surrender action fires (bankroll delta applied at surrender time per architecture.md Section 1.6). The hand is marked inactive (`IsSurrendered = true`). If this was the last or only hand, the state machine advances through DealerTurn to Resolution. If additional split hands remain, the state machine continues PlayerTurn on the next hand before reaching Resolution. This state covers the Resolution phase rendering when surrender was the final hand outcome — including when no DealerTurn was needed because all hands either busted or surrendered.
+
+### Entering from PlayerTurn
+
+Surrender transition fires in `PlayerTurn`. Half-bet return chip animation plays immediately on surrender: half of the MainBet chip stack animates from the MainBetSpot back toward the BankrollDisplay position using the chip win collection animation (`Chip win collection`, 350ms, `cubic-bezier(0.4, 0.0, 0.2, 1.0)`). The remaining half-bet chips animate to the dealer area (chip loss collection, 350ms) when Resolution is entered. Both animations are non-interruptible.
+
+### Visible Elements
+
+All fixed elements, all cards at final positions, plus:
+
+| Element | Component | Position (x, y) | Size (w x h) | Notes |
+|---|---|---|---|---|
+| Player HandTotalBadge | PlayerHandZone / HandTotalBadge | Above player card fan | — | Noto Serif `text_display_sm`; `color_text_secondary` at `opacity_disabled_primary` (60%); value frozen at surrender total |
+| DealerTotalBadge | DealerHandZone | (960, 215) | — | Hidden if DealerTurn was skipped (all hands surrendered or busted without dealer needing to draw); visible if DealerTurn ran |
+| Half-bet return chip animation | ChipStack / Chip arc | MainBetSpot → BankrollDisplay direction | — | 350ms slide; chips representing `floor(MainBet / 2)` leave the player zone toward bankroll; chip win collection animation |
+| Remaining half chips (house take) | ChipStack / Chip arc | MainBetSpot → dealer area | — | 350ms slide away; remaining chips leave toward dealer area; chip loss collection animation |
+
+### Chip Animation Sequence
+
+1. Half-bet return chips animate from MainBetSpot toward BankrollDisplay (350ms, chip win collection).
+2. Remaining half chips animate from MainBetSpot toward dealer area (350ms, chip loss collection).
+3. Both animations play sequentially — return fires first to communicate the partial recovery, then house take follows.
+4. No win numeral float. No screen-edge bloom. Surrender is transactional — the half-return is the only signal.
+5. No dedicated SFX beyond chip movement sound.
+
+### Text / Label
+
+No result label specific to surrender. The HandTotalBadge shows the hand's final total at `color_text_secondary` at `opacity_disabled_primary` (60%) — reduced opacity signals the hand is inactive without requiring a dedicated label. No "SURRENDER" text overlay appears.
+
+### Transition Into This State
+
+Enters from `PlayerTurn` via the `Surrender()` transition. Chip animations begin immediately. The `transition_panel_enter` and `transition_panel_exit` tokens are not used — chip animations use their own motion tokens (`Chip win collection`, `Chip loss collection`).
+
+### Side Bet Interaction
+
+If TriLux or LuckyLucky bets were placed, those side bets resolved in `SideBetResolution` before `PlayerTurn` began. Side bet outcomes are unaffected by player surrender — a TriLux win still paid at its result in `SideBetResolution`. At this point in `Resolution`, side bet chips have already been resolved and cleared. No additional side bet animation occurs during surrender resolution.
+
+### Edge Cases
+
+- **Surrender on split hand (not last hand):** Half-bet return and house take animations play for the surrendered hand immediately. The state machine then continues `PlayerTurn` on the next split hand. Resolution — Surrender rendering only applies when `Resolution` phase is entered with all remaining hands having a final outcome.
+- **All hands surrendered:** DealerTurn is skipped entirely. `DealerHandZone` hole card remains face-down. `DealerTotalBadge` is not shown.
+- **Surrender + other hand outcomes (split):** If one split hand surrendered and another won or lost, this state does not apply — see the Split Resolution mixed-outcome note in State 17 below.
 
 ---
 

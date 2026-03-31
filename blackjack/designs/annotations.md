@@ -63,12 +63,12 @@ Visual state columns:
 | State | Treatment |
 |---|---|
 | Default (affordable, unselected) | Chip base color per denomination token; edge segments (8 alternating); `color_gold_light` ring at 80% radius at 50% opacity; denomination numeral Manrope SemiBold `text_base` `color_text_primary` |
-| Selected | Same base + `color_gold` glow at 40% opacity, `space_2` (8px) blur radius |
-| Hover (affordable, unselected) | `color_gold_light` glow at 20% opacity, 4px blur radius |
-| Disabled (unaffordable) | 40% opacity overall; no pointer cursor; glow suppressed |
+| Selected | Same base + `color_gold` glow at 40% opacity (visual-language.md Section 5 `Selection glow opacity`), `space_2` (8px) blur radius |
+| Hover (affordable, unselected) | `color_gold_light` glow at `opacity_chip_hover_glow` (20%), 4px blur radius |
+| Disabled (unaffordable) | `opacity_disabled_secondary` (40%) overall; no pointer cursor; glow suppressed |
 
 **Chip diameter token:** 44px tray size. (Source: visual-language.md Section 5, Chip Dimensions.)
-**Selection glow tokens:** `color_gold` at 40% opacity, `space_2` (8px) blur.
+**Selection glow tokens:** `color_gold` at 40% opacity (visual-language.md Section 5 `Selection glow opacity`), `space_2` (8px) blur.
 **Denomination-to-color token mapping:**
 
 | Denomination | Fill token |
@@ -121,7 +121,7 @@ Visual state columns:
 
 | State | Treatment |
 |---|---|
-| Default (Idle / Betting MainBet = 0) | "TRILUX" felt label at `color_felt_marking`; zone not interactive; 40% opacity |
+| Default (Idle / Betting MainBet = 0) | "TRILUX" felt label at `color_felt_marking`; zone not interactive; `opacity_disabled_secondary` (40%) |
 | Active (Betting, MainBet > 0) | Label at full `color_felt_marking` opacity; zone accepts click; `color_ghost_border` subtle outline on hover |
 | Bet placed | ChipStack renders one chip (single denomination; replace-on-next-click behavior) |
 | Locked (all other phases) | `IsActive = false`; not interactive; chip stack (if present) still visible |
@@ -181,7 +181,7 @@ Visual state columns:
 
 | State | Fill | Text / Icon | Notes |
 |---|---|---|---|
-| Disabled (Idle / no bet) | `color_gold` fill at 30% opacity | Manrope Bold `text_base`; `color_background` at 40% opacity; `icon_base` | `IsGoldAccent = true` but `IsEnabled = false` |
+| Disabled (Idle / no bet) | `color_gold` fill at `opacity_disabled_primary` (60%) | Manrope Bold `text_base`; `color_background` at `opacity_disabled_content` (40%); `icon_base` | `IsGoldAccent = true` but `IsEnabled = false` |
 | Enabled (Betting, MainBet >= MinBet) | `color_gold` fill at 100% | `color_background` text; `icon_base` icon in `color_background` | Full gold accent; highest visual weight on screen during betting |
 | Hover (enabled) | `color_gold_light` fill | `color_background` text | Lightened gold on hover |
 | Pressed | `color_gold` fill at 80%; translate 1px down | `color_background` text | Brief press feedback |
@@ -207,7 +207,7 @@ Visual state columns:
 
 | State | Fill | Text |
 |---|---|---|
-| Disabled (no bet) | `color_surface` at 50% opacity | Manrope Medium `text_base`; `color_text_secondary` at 50% opacity |
+| Disabled (no bet) | `color_surface` at `opacity_disabled_primary` (60%) | Manrope Medium `text_base`; `color_text_secondary` at `opacity_disabled_primary` (60%) |
 | Enabled (MainBet > 0) | `color_surface` | `color_text_secondary` |
 | Hover (enabled) | `color_surface_high` | `color_text_primary` |
 | Pressed | `color_surface` at 80%; translate 1px down | `color_text_primary` |
@@ -237,7 +237,7 @@ Visual state columns:
 | Default (enabled) | `color_surface` | Manrope Bold `text_base`; `color_text_primary`; `icon_base` `color_text_secondary` |
 | Hover | `color_surface_high` | `color_text_primary`; `icon_base` `color_text_primary` |
 | Pressed | `color_surface` at 80%; 1px down | Same |
-| Disabled | `color_surface` at 40% opacity | `color_text_secondary` at 40% opacity |
+| Disabled | `color_surface` at `opacity_disabled_secondary` (40%) | `color_text_secondary` at `opacity_disabled_secondary` (40%) |
 
 **Icon:** `res://assets/icons/hit.svg`; `icon_base` (20px).
 **Label:** "HIT" — all-caps Manrope Bold `text_base`, 0.1rem letter-spacing.
@@ -333,7 +333,7 @@ Visual state treatment identical to Hit Button. Label "SURRENDER". Icon `res://a
 | 21 (auto-stand) | "21" | Same |
 | Bust | "BUST" | Noto Serif `text_display_sm`; `color_error` |
 | Active hand (split layout) | Same as normal | Full opacity |
-| Inactive hand (split layout) | Same as normal | 60% opacity |
+| Inactive hand (split layout) | Same as normal | `opacity_disabled_primary` (60%) |
 
 **Soft hand notation:** "soft 18" uses Noto Serif `text_display_sm` with a smaller Manrope `text_sm` prefix label "soft" in `color_text_secondary` — renders as two-line badge: "soft" above, "18" below. This maintains rapid readability of the key numeric value.
 
@@ -369,7 +369,7 @@ Visual state treatment identical to Hit Button. Label "SURRENDER". Icon `res://a
 
 **Background:** `color_surface_modal`
 **Border:** None — tonal layering, no explicit border (per ux-research.md)
-**Corner radius:** `radius_lg` (from visual-language.md)
+**Corner radius:** 6px (single corner radius value, visual-language.md Section 5)
 
 ---
 
@@ -380,13 +380,13 @@ Visual state treatment identical to Hit Button. Label "SURRENDER". Icon `res://a
 | Element name | Insurance — Yes |
 | Component | InsuranceBetPrompt.tscn / ActionButton.tscn [shared] |
 | Size | 200 x 52 |
-| Position | (750, 578) — within modal |
+| Position | (752, 578) — within modal |
 | States visible | InsurancePrompt |
 | Signal emitted | `ActionPressed()` — InsuranceBetPrompt emits own signal bubbled to BlackjackTable.cs → `_game.ResolveInsurance(true)` |
 
 **Visual states:** Standard ActionButton enabled states. `IsGoldAccent = false`. Label "TAKE INSURANCE".
 
-**Layout rule:** Two buttons, 200 x 52px each, 20px gap between them, horizontally centered within the 480px modal. Left button (TAKE INSURANCE) top-left at (750, 578). Right button (DECLINE) top-left at (970, 578).
+**Layout rule:** Two buttons, 200 x 52px each, `space_4` (16px) gap between them, horizontally centered within the 480px modal. Left button (TAKE INSURANCE) top-left at (752, 578). Right button (DECLINE) top-left at (968, 578).
 
 ---
 
@@ -397,13 +397,13 @@ Visual state treatment identical to Hit Button. Label "SURRENDER". Icon `res://a
 | Element name | Insurance — No |
 | Component | InsuranceBetPrompt.tscn / ActionButton.tscn [shared] |
 | Size | 200 x 52 |
-| Position | (970, 578) — within modal |
+| Position | (968, 578) — within modal |
 | States visible | InsurancePrompt |
 | Signal emitted | `ActionPressed()` → `_game.ResolveInsurance(false)` |
 
 **Visual states:** Standard ActionButton enabled states. `IsGoldAccent = false`. Label "DECLINE".
 
-**Layout rule:** Two buttons, 200 x 52px each, 20px gap between them, horizontally centered within the 480px modal. Left button (TAKE INSURANCE) top-left at (750, 578). Right button (DECLINE) top-left at (970, 578).
+**Layout rule:** Two buttons, 200 x 52px each, `space_4` (16px) gap between them, horizontally centered within the 480px modal. Left button (TAKE INSURANCE) top-left at (752, 578). Right button (DECLINE) top-left at (968, 578).
 
 ---
 
@@ -436,7 +436,7 @@ Visual state treatment identical to Hit Button. Label "SURRENDER". Icon `res://a
 | Element name | SideBetResultBanner |
 | Component | SideBetResultBanner.tscn [BJ-specific] |
 | Size | 200 x 80 |
-| Position | TriLux: (720, 560); LuckyLucky: (1000, 560) — positioned above the respective BetSpot |
+| Position | TriLux: (820, 560); LuckyLucky: (1100, 560) — positioned above the respective BetSpot |
 | States visible | SideBetResolution |
 | Signal emitted | None (parent AnimationPlayer handles sequence completion signal) |
 
@@ -444,7 +444,7 @@ Visual state treatment identical to Hit Button. Label "SURRENDER". Icon `res://a
 
 | Outcome | Fill | Text | Animation |
 |---|---|---|---|
-| Win | `color_surface_high` at 80% opacity; `color_gold` thin border at 40% opacity | Noto Serif `text_display_sm`; `color_gold`; payout amount | `transition_panel_enter` (400ms); hold 400ms; `transition_panel_exit` (300ms) |
+| Win | `color_surface_high` at `opacity_side_bet_banner_fill` (80%); `color_gold` thin border at `opacity_side_bet_banner_border` (40%) | Noto Serif `text_display_sm`; `color_gold`; payout amount | `transition_panel_enter` (400ms); hold 400ms; `transition_panel_exit` (300ms) |
 | Lose | None (transparent) | Manrope `text_base`; `color_text_secondary`; "—" or loss text | `transition_fade_in` (300ms); hold 200ms; `transition_fade_out` (300ms) |
 
 **Win text format:** "TRILUX\n+$[amount]" — two lines; label line Noto Serif `text_xl`, amount line Noto Serif `text_display_sm`.
@@ -466,7 +466,7 @@ Visual state treatment identical to Hit Button. Label "SURRENDER". Icon `res://a
 
 | State | Fill | Text |
 |---|---|---|
-| Default (visible) | `color_surface` at 90% opacity; 6px corner radius | Manrope Medium `text_base`; `color_text_secondary`; "TIP DEALER?"; dismiss "×" icon |
+| Default (visible) | `color_surface` at `opacity_tip_prompt_fill` (90%); 6px corner radius | Manrope Medium `text_base`; `color_text_secondary`; "TIP DEALER?"; dismiss "×" icon |
 | Tip button hover | `color_surface_high` | `color_text_primary` |
 
 **Auto-timeout:** Dismisses automatically after 5 seconds if no interaction. Uses `transition_panel_exit` (300ms) on dismiss.
@@ -507,6 +507,65 @@ Visual state treatment identical to Hit Button. Label "SURRENDER". Icon `res://a
 | Signal emitted | `AnimationCompleted()` |
 
 **Visual treatment:** Manrope `text_base`; `color_push` (`color_text_secondary`); "PUSH" text. Appears via `transition_panel_enter` (400ms). No float travel; no bloom. Stays briefly (400ms hold), then fades out via `transition_fade_out` (300ms).
+
+---
+
+## 21a. Surrender Chip Return Animation
+
+| Field | Value |
+|---|---|
+| Element name | Surrender chip return |
+| Component | ChipStack / Chip arc animation (same as chip win collection) |
+| States visible | PlayerTurn (fires on Surrender action); Resolution — Surrender |
+| Signal emitted | `AnimationCompleted()` → BlackjackTable.cs decrements `_animationsPending` |
+
+**Animation:**
+
+| Phase | Treatment |
+|---|---|
+| Half-bet return | Chips representing `floor(MainBet / 2)` animate from MainBetSpot toward BankrollDisplay position; 350ms; `cubic-bezier(0.4, 0.0, 0.2, 1.0)` (chip win collection token); non-interruptible |
+| House take | Remaining chips animate from MainBetSpot toward dealer area; 350ms; chip loss collection token; plays after half-bet return completes |
+
+**No win numeral float.** No screen-edge bloom. No SFX beyond chip movement.
+
+**Reduced motion:** Half-return chips appear at BankrollDisplay immediately; house chips disappear from MainBetSpot immediately. Both instant. No travel.
+
+---
+
+## 21b. Split Resolution — Mixed Outcomes
+
+| Field | Value |
+|---|---|
+| Element name | Split Resolution (mixed outcomes) |
+| Component | ResultBanner.tscn [shared] + ChipStack animations on multiple BetSpots |
+| States visible | Resolution phase with `PlayerHands.Length >= 2` and divergent `HandResult.Outcome` values |
+| Signal emitted | `AnimationCompleted()` per hand — BlackjackTable.cs decrements `_animationsPending` once per hand |
+
+**Resolution sequence (multi-hand):**
+
+Chip animations resolve sequentially from left to right across split hand zones, matching the `ActiveHandIndex` left-to-right ordering established in PlayerTurn. Each hand resolves fully before the next hand's animation begins.
+
+| Step | Behavior |
+|---|---|
+| 1 | Hand 0 (leftmost) chip animation plays: win collection (350ms) or loss collection (350ms) or surrender chip return sequence, per that hand's `HandResult.Outcome` |
+| 2 | If Hand 0 is a win: win numeral float plays from Hand 0 MainBetSpot toward BankrollDisplay (450ms); no bloom fires for individual hand numerals in split — only one bloom fires per full resolution cycle (see below) |
+| 3 | Hand 1 chip animation plays after Hand 0 animation completes (`AnimationCompleted` signal received) |
+| 4 | Repeat for Hands 2 and 3 if present |
+| 5 | After all hand animations complete: if any hand was a win or blackjack win, the screen-edge bloom pulse fires once (`color_win_bloom`, 500ms) |
+
+**Win numeral float in split:**
+Each winning hand emits its own win numeral float from its respective BetSpot position, traveling to the BankrollDisplay. They do not play simultaneously — each float starts only after the previous hand's chip animation is complete. All floats use `text_display_lg` Noto Serif, `color_gold`, 450ms, 100%→60% scale, alpha fades final 100ms (per visual-language.md motion spec).
+
+**Net result display:**
+No net-total summary banner is rendered. The bankroll display updates incrementally as each winning hand's chip animation completes and `GlobalState.ApplyBankrollDelta` fires per hand. The BankrollDisplay counter animation (150ms) fires once per hand delta, not as a lump sum.
+
+**Push in split:**
+If one hand pushes, the push indicator ("PUSH", `color_push`, `transition_panel_enter` 400ms) renders at the pushed hand's zone center, not at the global felt center (960, 480). Each outcome renders at its relevant hand zone.
+
+**Bloom rule:**
+Exactly one `color_win_bloom` fires per Resolution phase, regardless of how many hands won. It fires after all chip animations complete, if at least one hand's outcome is `Win` or `BlackjackWin`. If all hands lost or pushed, no bloom fires.
+
+**Architecture alignment:** This sequencing uses `_animationsPending` as defined in architecture.md Section 4.2 — each blocking chip animation increments the counter; each `AnimationCompleted` signal decrements it; the phase transition to `Idle` (or `PlayerBroke`) fires when `_animationsPending == 0`. The sequential per-hand ordering is enforced by the scene script, not the state machine.
 
 ---
 
@@ -563,9 +622,9 @@ Visual state treatment identical to Hit Button. Label "SURRENDER". Icon `res://a
 
 | State | Treatment |
 |---|---|
-| Face-up (normal) | Card body `color_surface_high`; rank glyph Noto Serif `text_2xl` (28px) weight Medium; suit symbol at `text_xl`; red suits: `color_error` (hearts, diamonds); black suits: `color_text_primary` (clubs, spades) |
+| Face-up (normal) | Card body `color_surface_high`; rank glyph Noto Serif `text_2xl` (28px) weight Medium; suit symbol at `text_xl`; red suits: `color_suit_red` (hearts, diamonds); black suits: `color_text_primary` (clubs, spades) |
 | Deal arc (in motion) | Travels lateral arc; 18px peak above table surface; 250ms ease-out; 2.5° overshoot settle 50ms |
-| Resting | Drop shadow: 4px blur, 0px horizontal / 2px vertical offset, 25% black opacity; slight ±2° rotation randomization applied by PlayerHandZone.cs |
+| Resting | Drop shadow: 4px blur, 0px horizontal / 2px vertical offset, 25% black opacity; slight rotation randomization applied by PlayerHandZone.cs in range [-`card_resting_rotation_max`, +`card_resting_rotation_max`] (±2°) |
 
 **Card back (dealer hole card):** Chevron Stripe with Center Seal (Option B, locked). `color_surface_high` and `color_surface_low` alternating 6px diagonal stripes at 45°; faint `color_gold` compass rose medallion at 25% opacity; `color_gold` 2px border frame.
 
@@ -616,7 +675,7 @@ The following design decisions are flagged as requiring developer confirmation b
 
 1. ~~**Design Flag 1 (RESOLVED):**~~ **Bet total display position:** (960, 648), horizontally centered, `text_bet_display`, `color_text_primary`. No overlap with felt markings (y=270–330). Position is confirmed.
 
-2. **Suit color for red suits:** `color_error` (`#ffb4ab`) is the muted rose error token. Used here for hearts and diamonds on card faces because it is the closest token to the convention red that stays within the Grand Atrium tonality. This is the intended interpretation — the token name is a coincidence of palette overlap. If the developer wants a distinct red suit token added to `visual-language.md`, that amendment should be made before card rendering is implemented.
+2. ~~**Suit color for red suits (RESOLVED):**~~ `color_suit_red` (`#cc2222`) is the dedicated token for hearts and diamonds on card faces, added to `visual-language.md` Section 1. Standard casino convention red. Distinct semantic role from `color_error` (`#ffb4ab`, muted rose error token). All card face rendering uses `color_suit_red` for red suits.
 
 3. **"Soft" prefix notation on HandTotalBadge:** The two-line soft hand badge ("soft" / "18") requires a composite label treatment not explicitly specified in `visual-language.md`. The tokens used (`text_display_sm` for the number, `text_sm` for the "soft" prefix) are in-spec. The two-line layout is a Phase 8 design decision. Flag for developer review.
 

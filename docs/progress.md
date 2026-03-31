@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 8 — Blackjack Visual Design (not yet started)
+Phase 9 — Project Scaffold (not yet started)
 
 ## Gate History
 
@@ -17,6 +17,7 @@ Phase 8 — Blackjack Visual Design (not yet started)
 | Phase 5 — Technical Architecture | APPROVED | 2026-03-30 | GlobalState autoload + scene-local split, FileAccess JSON persistence, 60fps/4s/150MB baseline, folder structure locked. |
 | Phase 6 — Blackjack Game Spec | APPROVED | 2026-03-30 | 6-deck, dealer stands soft 17, late surrender, 3:2. TriLux + Lucky Lucky side bets. SideBetResolution phase added. |
 | Phase 7 — Blackjack Technical Architecture | APPROVED | 2026-03-30 | 31 state transitions, Tween+AnimationPlayer animation system, all 12 shared components integrated, SideBetResolution phase fully specced. |
+| Phase 8 — Blackjack Visual Design | APPROVED | 2026-03-31 | Screen states for all 16 states including surrender and mixed-outcome split. Annotation doc, breakpoints, brand review. 10 blockers resolved before gate opened. |
 
 ## Pending Decisions
 
