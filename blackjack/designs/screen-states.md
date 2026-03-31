@@ -321,7 +321,7 @@ Each hand has its own MainBetSpot, horizontally aligned under its hand zone:
 
 ### DoubleDownBetSpot
 
-Available on the active hand's bet zone, 80px to the right of the active MainBetSpot.
+Available on the active hand's bet zone, 124px to the right of the active MainBetSpot center.
 
 ### Visible Elements (in addition to fixed)
 
