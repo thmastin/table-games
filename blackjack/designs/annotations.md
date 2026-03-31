@@ -356,6 +356,23 @@ Visual state treatment identical to Hit Button. Label "SURRENDER". Icon `res://a
 
 ---
 
+## 15b. InsuranceBetPrompt Panel
+
+| Field | Value |
+|---|---|
+| Element name | InsuranceBetPrompt Panel |
+| Component | Game-specific (InsuranceBetPrompt.tscn) |
+| Size | 480 x 200 |
+| Position | Center (960, 540) — top-left (720, 440) |
+| States visible | InsurancePrompt only |
+| Signal emitted | None — container panel |
+
+**Background:** `color_surface_modal`
+**Border:** None — tonal layering, no explicit border (per ux-research.md)
+**Corner radius:** `radius_lg` (from visual-language.md)
+
+---
+
 ## 16. InsuranceBetPrompt — Yes Button
 
 | Field | Value |
@@ -363,11 +380,13 @@ Visual state treatment identical to Hit Button. Label "SURRENDER". Icon `res://a
 | Element name | Insurance — Yes |
 | Component | InsuranceBetPrompt.tscn / ActionButton.tscn [shared] |
 | Size | 200 x 52 |
-| Position | (820, 560) — within modal |
+| Position | (750, 578) — within modal |
 | States visible | InsurancePrompt |
 | Signal emitted | `ActionPressed()` — InsuranceBetPrompt emits own signal bubbled to BlackjackTable.cs → `_game.ResolveInsurance(true)` |
 
 **Visual states:** Standard ActionButton enabled states. `IsGoldAccent = false`. Label "TAKE INSURANCE".
+
+**Layout rule:** Two buttons, 200 x 52px each, 20px gap between them, horizontally centered within the 480px modal. Left button (TAKE INSURANCE) top-left at (750, 578). Right button (DECLINE) top-left at (970, 578).
 
 ---
 
@@ -378,11 +397,13 @@ Visual state treatment identical to Hit Button. Label "SURRENDER". Icon `res://a
 | Element name | Insurance — No |
 | Component | InsuranceBetPrompt.tscn / ActionButton.tscn [shared] |
 | Size | 200 x 52 |
-| Position | (1100, 560) — within modal |
+| Position | (970, 578) — within modal |
 | States visible | InsurancePrompt |
 | Signal emitted | `ActionPressed()` → `_game.ResolveInsurance(false)` |
 
 **Visual states:** Standard ActionButton enabled states. `IsGoldAccent = false`. Label "DECLINE".
+
+**Layout rule:** Two buttons, 200 x 52px each, 20px gap between them, horizontally centered within the 480px modal. Left button (TAKE INSURANCE) top-left at (750, 578). Right button (DECLINE) top-left at (970, 578).
 
 ---
 
@@ -571,7 +592,7 @@ These are printed text rendered as Godot Label nodes, not baked textures, for cr
 
 The following design decisions are flagged as requiring developer confirmation before implementation. They are outside the scope of `visual-language.md` and cannot be resolved from existing reference documents.
 
-1. **Bet total display position during Betting:** The screen-states document places the bet total label at (960, 648) above the chip stack. This position is between the stack and the felt markings row. If the MainBetSpot arc marking occupies the same vertical zone, the label may overlap the felt text. The developer should confirm vertical clearance during Godot layout.
+1. ~~**Design Flag 1 (RESOLVED):**~~ **Bet total display position:** (960, 648), horizontally centered, `text_bet_display`, `color_text_primary`. No overlap with felt markings (y=270–330). Position is confirmed.
 
 2. **Suit color for red suits:** `color_error` (`#ffb4ab`) is the muted rose error token. Used here for hearts and diamonds on card faces because it is the closest token to the convention red that stays within the Grand Atrium tonality. This is the intended interpretation — the token name is a coincidence of palette overlap. If the developer wants a distinct red suit token added to `visual-language.md`, that amendment should be made before card rendering is implemented.
 

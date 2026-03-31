@@ -202,7 +202,7 @@ These domains do not mix. A Noto Serif label never appears on a button. A Manrop
 | Result banners (Blackjack, Push, Bust, etc.) | Noto Serif | `text_display_sm` | Regular (400) | On the felt or near the hand zone. Not in the chrome. |
 | CashierScreen headings | Noto Serif | `text_display_sm` | Regular (400) | Follows the pairing rule when a supporting Manrope label is present. |
 | CashierScreen body text | Manrope | `text_base` | Regular (400) | `color_text_secondary`. |
-| InsuranceBetPrompt heading | Noto Serif | `text_xl` | Regular (400) | Brief. The decision itself is the focal point, not the heading. |
+| InsuranceBetPrompt heading | Noto Serif | `text_xl` | Regular (400) | "Insurance?" — centered above buttons. `color_text_primary`. Brief. The decision itself is the focal point, not the heading. |
 
 **The pairing rule in Blackjack:** Wherever a section heading appears over a supporting label — for example, in RulesPanel or CashierScreen — use `text_display_lg` Noto Serif (headline-lg) paired with `text_sm` Manrope in all-caps at 0.1rem letter-spacing. This is the only approved heading/label combination.
 
