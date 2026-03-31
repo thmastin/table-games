@@ -213,6 +213,7 @@ Visual state columns:
 | Pressed | `color_surface` at 80%; translate 1px down | `color_text_primary` |
 
 **Icon:** `res://assets/icons/clear.svg`; `icon_sm` (16px).
+**Label:** "CLEAR" — all-caps Manrope Medium `text_base`, 0.1rem letter-spacing. Not "Clear Bet" — label space is constrained.
 
 ---
 
@@ -361,12 +362,12 @@ Visual state treatment identical to Hit Button. Label "SURRENDER". Icon `res://a
 |---|---|
 | Element name | Insurance — Yes |
 | Component | InsuranceBetPrompt.tscn / ActionButton.tscn [shared] |
-| Size | 160 x 52 |
+| Size | 200 x 52 |
 | Position | (820, 560) — within modal |
 | States visible | InsurancePrompt |
 | Signal emitted | `ActionPressed()` — InsuranceBetPrompt emits own signal bubbled to BlackjackTable.cs → `_game.ResolveInsurance(true)` |
 
-**Visual states:** Standard ActionButton enabled states. `IsGoldAccent = false`. Label "YES".
+**Visual states:** Standard ActionButton enabled states. `IsGoldAccent = false`. Label "TAKE INSURANCE".
 
 ---
 
@@ -376,12 +377,12 @@ Visual state treatment identical to Hit Button. Label "SURRENDER". Icon `res://a
 |---|---|
 | Element name | Insurance — No |
 | Component | InsuranceBetPrompt.tscn / ActionButton.tscn [shared] |
-| Size | 160 x 52 |
+| Size | 200 x 52 |
 | Position | (1100, 560) — within modal |
 | States visible | InsurancePrompt |
 | Signal emitted | `ActionPressed()` → `_game.ResolveInsurance(false)` |
 
-**Visual states:** Standard ActionButton enabled states. `IsGoldAccent = false`. Label "NO".
+**Visual states:** Standard ActionButton enabled states. `IsGoldAccent = false`. Label "DECLINE".
 
 ---
 
