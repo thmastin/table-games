@@ -407,6 +407,28 @@ Visual state treatment identical to Hit Button. Label "SURRENDER". Icon `res://a
 
 ---
 
+## 17b. InsuranceAmountLabel
+
+| Field | Value |
+|---|---|
+| Element name | InsuranceAmountLabel |
+| Component | Game-specific (label inside InsuranceBetPrompt.tscn) |
+| Size | 360 x 28 |
+| Position | Center (960, 510) — top-left (780, 496) |
+| States visible | InsurancePrompt only |
+| Signal emitted | None — display only |
+
+**Content:** "Costs $[half of MainBet]" — dynamically bound to `floor(MainBet / 2)`.
+**Typography:** `text_base`, `color_text_secondary`, Manrope.
+
+**Visual states:**
+
+| State | Treatment |
+|---|---|
+| Default | Display only; not interactive; single visual state |
+
+---
+
 ## 18. SideBetResultBanner
 
 | Field | Value |

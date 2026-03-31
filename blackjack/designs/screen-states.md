@@ -217,11 +217,11 @@ All fixed elements, all cards at dealt positions (hole card face-down), plus:
 
 | Element | Component | Position (x, y) | Size (w x h) | Notes |
 |---|---|---|---|---|
-| InsuranceBetPrompt modal | InsuranceBetPrompt.tscn [BJ-specific] | (660, 380) | 600 x 280 | `color_surface_modal` at 60% opacity; 20px backdrop blur; `transition_modal_enter` (450ms) |
-| Prompt heading | Inside InsuranceBetPrompt | (960, 440) centered | — | Noto Serif `text_display_sm`; `color_text_primary`; "INSURANCE?" |
-| Insurance amount label | Inside InsuranceBetPrompt | (960, 490) centered | — | Manrope `text_base`; `color_text_secondary`; "Costs $[half of MainBet]" |
-| Yes button | Inside InsuranceBetPrompt | (820, 560) | 160 x 52 | ActionButton.tscn [shared]; "YES" label; `IsEnabled = true`; not gold accent |
-| No button | Inside InsuranceBetPrompt | (1100, 560) | 160 x 52 | ActionButton.tscn [shared]; "NO" label; `IsEnabled = true`; not gold accent |
+| InsuranceBetPrompt modal | InsuranceBetPrompt.tscn [BJ-specific] | (720, 440) | 480 x 200 | `color_surface_modal`; `transition_modal_enter` (450ms) |
+| Prompt heading | Inside InsuranceBetPrompt | (960, 440) centered | — | Noto Serif `text_display_sm`; `color_text_primary`; "Insurance?" |
+| Insurance amount label | Inside InsuranceBetPrompt | (960, 510) centered | 360 x 28 | Manrope `text_base`; `color_text_secondary`; "Costs $[half of MainBet]"; dynamically bound to `floor(MainBet / 2)` |
+| TAKE INSURANCE button | Inside InsuranceBetPrompt | (750, 578) | 200 x 52 | ActionButton.tscn [shared]; "TAKE INSURANCE" label; `IsEnabled = true`; not gold accent |
+| DECLINE button | Inside InsuranceBetPrompt | (970, 578) | 200 x 52 | ActionButton.tscn [shared]; "DECLINE" label; `IsEnabled = true`; not gold accent |
 | MainBetSpot chip stack | BetSpot / ChipStack | (960, 700) | 88 x 80 | Visible but inactive |
 
 ### Active / Highlighted
