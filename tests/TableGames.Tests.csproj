@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>TableGames.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="4.2.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+  </ItemGroup>
+
+  <!-- Reference pure logic files from the main project directly.
+       We do NOT reference the main .csproj because it depends on Godot.NET.Sdk,
+       which requires a running Godot context to build.
+       Logic files in shared/logic/ and games/*/logic/ use no Godot types
+       and are compiled directly into the test assembly. -->
+  <ItemGroup>
+    <Compile Include="../shared/logic/**/*.cs" />
+    <Compile Include="../games/blackjack/logic/**/*.cs" />
+    <Compile Include="../shared/config/GameConfig.cs" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,16 @@
+# Godot build artifacts
+.godot/
+*.uid
+
+# Export output
+export/
+
+# .NET build artifacts
+obj/
+bin/
+*.user
+.vs/
+
+# OS
+.DS_Store
+Thumbs.db
