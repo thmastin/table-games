@@ -70,7 +70,7 @@ These elements are present in every screen state and are not repeated in each st
 |---|---|---|---|---|
 | All fixed elements (above) | — | — | — | — |
 | Deal button | ActionButton.tscn [shared] (Deal, inside BlackjackActionPanel) | (1710, 900) | 180 x 52 | `IsEnabled = false`; `IsGoldAccent = true` but no active bet so rendered at dimmed state; label "DEAL"; `icon_base` |
-| Clear Bet button | ActionButton.tscn [shared] (Clear Bet, inside BlackjackActionPanel) | (1710, 964) | 180 x 36 | `IsEnabled = false`; default surface; label "CLEAR BET" |
+| Clear Bet button | ActionButton.tscn [shared] (Clear Bet, inside BlackjackActionPanel) | (1710, 964) | 180 x 36 | `IsEnabled = false`; default surface; label "CLEAR" |
 
 ### Active / Highlighted
 
@@ -107,7 +107,7 @@ All fixed elements plus:
 | TriLux chip stack | SideBetZone / TriLuxBetSpot / ChipStack | (820, 645) | 80 x 56 | Empty until TriLux bet placed |
 | LuckyLucky chip stack | SideBetZone / LuckyLuckyBetSpot / ChipStack | (1100, 645) | 100 x 56 | Empty until LuckyLucky bet placed |
 | Deal button (active) | ActionButton.tscn [shared] | (1710, 900) | 180 x 52 | `IsEnabled = true` when MainBet >= MinBet; `IsGoldAccent = true`; full gold accent style: `color_gold` fill, `color_background` label text |
-| Clear Bet button (active) | ActionButton.tscn [shared] | (1710, 964) | 180 x 36 | `IsEnabled = true` when MainBet > 0; label "CLEAR BET" |
+| Clear Bet button (active) | ActionButton.tscn [shared] | (1710, 964) | 180 x 36 | `IsEnabled = true` when MainBet > 0; label "CLEAR" |
 
 ### Active / Highlighted
 
@@ -218,7 +218,7 @@ All fixed elements, all cards at dealt positions (hole card face-down), plus:
 | Element | Component | Position (x, y) | Size (w x h) | Notes |
 |---|---|---|---|---|
 | InsuranceBetPrompt modal | InsuranceBetPrompt.tscn [BJ-specific] | (720, 440) | 480 x 200 | `color_surface_modal`; `transition_modal_enter` (450ms) |
-| Prompt heading | Inside InsuranceBetPrompt | (960, 440) centered | — | Noto Serif `text_display_sm`; `color_text_primary`; "Insurance?" |
+| Prompt heading | Inside InsuranceBetPrompt | (960, 440) centered | — | Noto Serif `text_xl`; `color_text_primary`; "Insurance?" |
 | Insurance amount label | Inside InsuranceBetPrompt | (960, 510) centered | 360 x 28 | Manrope `text_base`; `color_text_secondary`; "Costs $[half of MainBet]"; dynamically bound to `floor(MainBet / 2)` |
 | TAKE INSURANCE button | Inside InsuranceBetPrompt | (750, 578) | 200 x 52 | ActionButton.tscn [shared]; "TAKE INSURANCE" label; `IsEnabled = true`; not gold accent |
 | DECLINE button | Inside InsuranceBetPrompt | (970, 578) | 200 x 52 | ActionButton.tscn [shared]; "DECLINE" label; `IsEnabled = true`; not gold accent |
@@ -253,7 +253,7 @@ All fixed elements, plus:
 | Player HandTotalBadge | PlayerHandZone / HandTotalBadge | (960, 752) | — | Noto Serif `text_display_sm` (36px); `color_text_primary`; centered above card fan |
 | Dealer upcard label (rank only, no total) | DealerHandZone / HandTotalBadge | Hidden | — | DealerTotalBadge is hidden during PlayerTurn; hole card value is unknown |
 | MainBetSpot chip stack | BetSpot / ChipStack | (960, 700) | 88 x 80 | `IsActive = false` during PlayerTurn; stack shows placed bet |
-| DoubleDownBetSpot (empty marker) | BlackjackBetZone / DoubleDownBetSpot | (1060, 700) | 88 x 80 | Visible as an empty zone marker when `CanDouble = true` |
+| DoubleDownBetSpot (empty marker) | BlackjackBetZone / DoubleDownBetSpot | (1040, 660) | 88 x 80 | Visible as an empty zone marker when `CanDouble = true` |
 | Hit button | BlackjackActionPanel / ActionButton [shared] | (1710, 780) | 180 x 52 | `IsEnabled = Actions.CanHit`; label "HIT"; `icon_base` |
 | Stand button | BlackjackActionPanel / ActionButton [shared] | (1710, 844) | 180 x 52 | `IsEnabled = Actions.CanStand`; label "STAND" |
 | Double button | BlackjackActionPanel / ActionButton [shared] | (1710, 908) | 180 x 52 | `IsEnabled = Actions.CanDouble`; label "DOUBLE" |
