@@ -152,7 +152,7 @@ Visual state columns:
 | Element name | DoubleDownBetSpot |
 | Component | BetSpot.tscn [shared], inside BlackjackBetZone.tscn [BJ-specific] |
 | Size | 88 x 80 |
-| Position | (1040, 660) (top-left; center at 1084, 700; 80px right of MainBetSpot center) |
+| Position | (1040, 660) (top-left; center at 1084, 700; 124px right of MainBetSpot center) |
 | States visible | Visible as empty zone marker when `CanDouble = true` during PlayerTurn; chip animates in on double confirm |
 | Signal emitted | None during PlayerTurn — DoubleDown is triggered by the Double ActionButton, not by clicking this spot directly |
 
