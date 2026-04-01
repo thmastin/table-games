@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 9 — Project Scaffold (not yet started)
+Phase 11 — Blackjack Static UI (not yet started)
 
 ## Gate History
 
@@ -18,6 +18,8 @@ Phase 9 — Project Scaffold (not yet started)
 | Phase 6 — Blackjack Game Spec | APPROVED | 2026-03-30 | 6-deck, dealer stands soft 17, late surrender, 3:2. TriLux + Lucky Lucky side bets. SideBetResolution phase added. |
 | Phase 7 — Blackjack Technical Architecture | APPROVED | 2026-03-30 | 31 state transitions, Tween+AnimationPlayer animation system, all 12 shared components integrated, SideBetResolution phase fully specced. |
 | Phase 8 — Blackjack Visual Design | APPROVED | 2026-03-31 | Screen states for all 16 states including surrender and mixed-outcome split. Annotation doc, breakpoints, brand review. 10 blockers resolved before gate opened. |
+| Phase 9 — Project Scaffold | APPROVED | 2026-03-31 | Godot 4 + C#, net9.0, NUnit smoke test passing, folder structure per technical-architecture.md. |
+| Phase 10 — Blackjack Game Logic (TDD) | APPROVED | 2026-03-31 | 207 tests, 0 failures. Full logic layer: Card, Deck, Hand, ActionAvailabilityCalculator, BetResolver, TriLux/LuckyLucky evaluators, BlackjackStateMachine (InvalidTransitionException on invalid transitions). |
 
 ## Pending Decisions
 
