@@ -1,14 +1,21 @@
 ; Engine configuration file.
 ; It's best edited using the editor UI and not directly,
-; but the file format allows direct editing.
-; See: https://docs.godotengine.org/en/stable/classes/class_projectsettings.html
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
 
 config_version=5
+
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
 config/name="Table Games"
-config/features=PackedStringArray("4.3", "C#")
+config/features=PackedStringArray("4.6", "C#")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -20,7 +27,6 @@ GlobalState="*res://shared/autoloads/GlobalState.cs"
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/size/initial_position_type=0
-window/size/mode=0
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 

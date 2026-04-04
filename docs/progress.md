@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-Phase 11 — Blackjack Static UI (not yet started)
+Phase 11 — Blackjack Static UI (visual review in progress — 7 blockers found and fixed 2026-04-03, pending re-verification in Godot editor)
 
 ## Gate History
 
