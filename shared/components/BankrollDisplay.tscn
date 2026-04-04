@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://0bad8313ls30r"]
+
+[ext_resource type="Script" path="res://shared/components/BankrollDisplay.cs" id="1_bankrolldisplay"]
+
+[node name="BankrollDisplay" type="Control"]
+script = ExtResource("1_bankrolldisplay")

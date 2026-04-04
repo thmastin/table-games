@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://yrn4retah2t0p"]
+
+[ext_resource type="Script" path="res://games/blackjack/fixtures/FixturePlayerBroke.cs" id="1_fixtureplayerbroke"]
+
+[node name="FixturePlayerBroke" type="Node2D"]
+script = ExtResource("1_fixtureplayerbroke")

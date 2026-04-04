@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://2s0mha6krwjea"]
+
+[ext_resource type="Script" path="res://games/blackjack/fixtures/FixtureLoss.cs" id="1_fixtureloss"]
+
+[node name="FixtureLoss" type="Node2D"]
+script = ExtResource("1_fixtureloss")

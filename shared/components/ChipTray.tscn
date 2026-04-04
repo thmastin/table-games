@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://j19hje7bjuhks"]
+
+[ext_resource type="Script" path="res://shared/components/ChipTray.cs" id="1_chiptray"]
+
+[node name="ChipTray" type="Control"]
+script = ExtResource("1_chiptray")

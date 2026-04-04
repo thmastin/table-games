@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://9w1mgk8xfm8y2"]
+
+[ext_resource type="Script" path="res://games/blackjack/components/DealerHandZone.cs" id="1_dealerhandzone"]
+
+[node name="DealerHandZone" type="Control"]
+script = ExtResource("1_dealerhandzone")

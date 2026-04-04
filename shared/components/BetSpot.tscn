@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://rdub4ef5ev60l"]
+
+[ext_resource type="Script" path="res://shared/components/BetSpot.cs" id="1_betspot"]
+
+[node name="BetSpot" type="Control"]
+script = ExtResource("1_betspot")

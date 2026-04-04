@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://9bd8vuwcyadzr"]
+
+[ext_resource type="Script" path="res://shared/components/CardFace.cs" id="1_cardface"]
+
+[node name="CardFace" type="Control"]
+script = ExtResource("1_cardface")

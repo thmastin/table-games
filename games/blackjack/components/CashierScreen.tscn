@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://unwuypp02w2j3"]
+
+[ext_resource type="Script" path="res://games/blackjack/components/CashierScreen.cs" id="1_cashierscreen"]
+
+[node name="CashierScreen" type="Control"]
+script = ExtResource("1_cashierscreen")

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://gcs5ibt8jvuee"]
+
+[ext_resource type="Script" path="res://games/blackjack/components/SideBetResultBanner.cs" id="1_sidebetresultbanner"]
+
+[node name="SideBetResultBanner" type="Control"]
+script = ExtResource("1_sidebetresultbanner")

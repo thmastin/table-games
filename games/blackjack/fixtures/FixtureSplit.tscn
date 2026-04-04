@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://v8g64l2nj3dgo"]
+
+[ext_resource type="Script" path="res://games/blackjack/fixtures/FixtureSplit.cs" id="1_fixturesplit"]
+
+[node name="FixtureSplit" type="Node2D"]
+script = ExtResource("1_fixturesplit")

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ulwvdgtak0jx6"]
+
+[ext_resource type="Script" path="res://games/blackjack/components/SideBetZone.cs" id="1_sidebetzone"]
+
+[node name="SideBetZone" type="Control"]
+script = ExtResource("1_sidebetzone")

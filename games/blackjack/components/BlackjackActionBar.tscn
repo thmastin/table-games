@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://963wk8dht3lue"]
+
+[ext_resource type="Script" path="res://games/blackjack/components/BlackjackActionBar.cs" id="1_blackjackactionbar"]
+
+[node name="BlackjackActionBar" type="Control"]
+script = ExtResource("1_blackjackactionbar")

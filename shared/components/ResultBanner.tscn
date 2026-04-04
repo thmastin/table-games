@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://out8z4hcousth"]
+
+[ext_resource type="Script" path="res://shared/components/ResultBanner.cs" id="1_resultbanner"]
+
+[node name="ResultBanner" type="Control"]
+script = ExtResource("1_resultbanner")

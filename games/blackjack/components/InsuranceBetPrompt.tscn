@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://70nc0nxzlsr5m"]
+
+[ext_resource type="Script" path="res://games/blackjack/components/InsuranceBetPrompt.cs" id="1_insurancebetprompt"]
+
+[node name="InsuranceBetPrompt" type="Control"]
+script = ExtResource("1_insurancebetprompt")

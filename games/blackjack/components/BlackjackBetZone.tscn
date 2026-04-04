@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ddrbe9g7vohah"]
+
+[ext_resource type="Script" path="res://games/blackjack/components/BlackjackBetZone.cs" id="1_blackjackbetzone"]
+
+[node name="BlackjackBetZone" type="Control"]
+script = ExtResource("1_blackjackbetzone")

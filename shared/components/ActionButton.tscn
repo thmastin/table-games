@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://q81axjfznj0lo"]
+
+[ext_resource type="Script" path="res://shared/components/ActionButton.cs" id="1_actionbutton"]
+
+[node name="ActionButton" type="Control"]
+script = ExtResource("1_actionbutton")

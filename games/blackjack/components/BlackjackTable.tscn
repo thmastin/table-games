@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://vdtf2veqgej3h"]
+
+[ext_resource type="Script" path="res://games/blackjack/components/BlackjackTable.cs" id="1_blackjacktable"]
+
+[node name="BlackjackTable" type="Node2D"]
+script = ExtResource("1_blackjacktable")

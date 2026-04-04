@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://s0nu36mwdmsrk"]
+
+[ext_resource type="Script" path="res://shared/components/HandTotalBadge.cs" id="1_handtotalbadge"]
+
+[node name="HandTotalBadge" type="Control"]
+script = ExtResource("1_handtotalbadge")

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://p783lvo53rfz9"]
+
+[ext_resource type="Script" path="res://games/blackjack/components/TipPrompt.cs" id="1_tipprompt"]
+
+[node name="TipPrompt" type="Control"]
+script = ExtResource("1_tipprompt")

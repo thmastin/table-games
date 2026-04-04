@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bftcf8ogaw5kx"]
+
+[ext_resource type="Script" path="res://shared/components/Chip.cs" id="1_chip"]
+
+[node name="Chip" type="Control"]
+script = ExtResource("1_chip")
