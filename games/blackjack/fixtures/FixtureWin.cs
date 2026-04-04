@@ -13,8 +13,9 @@ public partial class FixtureWin : FixtureBase
         AddBackground();
         AddTable();
         AddBankrollDisplay(amount: 1010);
+        AddChipTray(selectedDenomination: 5);
 
-        // Player hand: A♠ + 8♦ = 19 (soft, but shown as 19)
+        // Player hand: A♠ + 8♦ = 19 (soft); zone center y=730 keeps cards within felt
         AddPlayerHand(
             ranks:   new[] { 1, 8 },
             suits:   new[] { "spades", "diamonds" },
@@ -23,7 +24,7 @@ public partial class FixtureWin : FixtureBase
             isSoft:  true,
             isBust:  false,
             isActive: true,
-            center:  VisualLanguage.PosPlayerHandZoneCenter
+            center:  new Godot.Vector2(960, 730)
         );
 
         // Dealer hand busted: 6♦ + 9♥ + 10♠ = 25 (bust)
@@ -37,7 +38,9 @@ public partial class FixtureWin : FixtureBase
             isBust:     true
         );
 
-        AddBetZone(mainChips: new[] { 5, 5 }, isActive: false);
+        var betZone = AddBetZone(mainChips: new[] { 5, 5 }, isActive: false);
+        betZone.BetTotal = 10;
+        betZone.Refresh();
         AddSideBetZone();
 
         // ResultBanner in win state

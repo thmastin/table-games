@@ -11,8 +11,9 @@ public partial class FixtureLoss : FixtureBase
         AddBackground();
         AddTable();
         AddBankrollDisplay(amount: 980);
+        AddChipTray(selectedDenomination: 5);
 
-        // Player busted: 6♠ + 8♣ + 10♥ = 24
+        // Player busted: 6♠ + 8♣ + 10♥ = 24; zone center y=730 keeps cards within felt
         AddPlayerHand(
             ranks:   new[] { 6, 8, 10 },
             suits:   new[] { "spades", "clubs", "hearts" },
@@ -21,7 +22,7 @@ public partial class FixtureLoss : FixtureBase
             isSoft:  false,
             isBust:  true,
             isActive: true,
-            center:  VisualLanguage.PosPlayerHandZoneCenter
+            center:  new Godot.Vector2(960, 730)
         );
 
         // Dealer: K♦ + 10♣ = 20

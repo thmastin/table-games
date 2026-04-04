@@ -34,8 +34,6 @@ public partial class Chip : Control
     // -------------------------------------------------------------------------
 
     private bool _isHovered = false;
-    private ColorRect? _body;
-    private ColorRect? _glowRing;
     private Label? _label;
 
     // -------------------------------------------------------------------------
@@ -52,8 +50,7 @@ public partial class Chip : Control
         MouseExited  += _OnMouseExited;
         MouseFilter  = MouseFilterEnum.Stop;
 
-        _BuildChip(diameter);
-        _ApplyState(diameter);
+        _BuildLabel(diameter);
     }
 
     // -------------------------------------------------------------------------
@@ -71,31 +68,57 @@ public partial class Chip : Control
     }
 
     // -------------------------------------------------------------------------
-    // Construction
+    // Draw — circular chip rendered via _Draw() so it is a true circle.
     // -------------------------------------------------------------------------
 
-    private void _BuildChip(int diameter)
+    public override void _Draw()
     {
-        // Glow ring — rendered beneath the chip body, visible only when selected or hovered
-        _glowRing = new ColorRect();
-        _glowRing.Name = "GlowRing";
-        int glowPad = (int)VisualLanguage.ChipSelectionGlowRadius;
-        _glowRing.Size = new Vector2(diameter + glowPad * 2, diameter + glowPad * 2);
-        _glowRing.Position = new Vector2(-glowPad, -glowPad);
-        _glowRing.Color = new Color(VisualLanguage.ColorGold, 0f);
-        _glowRing.Visible = false;
-        AddChild(_glowRing);
+        int diameter = IsTraySize ? VisualLanguage.ChipDiameterTray : VisualLanguage.ChipDiameterStandard;
+        float radius = diameter / 2f;
+        var center = new Vector2(radius, radius);
+        Color baseColor = VisualLanguage.ChipColor(Denomination);
 
-        // Chip body
-        _body = new ColorRect();
-        _body.Name = "ChipBody";
-        _body.Size = new Vector2(diameter, diameter);
-        _body.Position = Vector2.Zero;
-        _body.Color = VisualLanguage.ChipColor(Denomination);
-        _body.MouseFilter = MouseFilterEnum.Ignore;
-        AddChild(_body);
+        // Glow ring behind chip (selection / hover)
+        if (IsSelected)
+        {
+            float glowR = radius + VisualLanguage.ChipSelectionGlowRadius;
+            DrawCircle(center, glowR, new Color(VisualLanguage.ColorGold, VisualLanguage.ChipSelectionGlowOpacity));
+        }
+        else if (_isHovered)
+        {
+            float glowR = radius + (VisualLanguage.ChipSelectionGlowRadius / 2f);
+            DrawCircle(center, glowR, new Color(VisualLanguage.ColorGold, VisualLanguage.OpacityChipHoverGlow));
+        }
 
-        // Denomination label
+        // Chip body — filled circle
+        DrawCircle(center, radius, baseColor);
+
+        // Edge segments — 8 alternating arcs (4 base, 4 lightened)
+        // Each arc spans 45 degrees. Render as thin arc lines at the chip edge.
+        Color lightened = baseColor.Lightened(0.30f);
+        float segAngle = Mathf.Tau / VisualLanguage.ChipEdgeSegmentCount;
+        float edgeWidth = 4f;
+        float edgeRadius = radius - edgeWidth / 2f;
+        for (int seg = 0; seg < VisualLanguage.ChipEdgeSegmentCount; seg++)
+        {
+            Color segColor = (seg % 2 == 0) ? baseColor : lightened;
+            float startAngle = seg * segAngle - Mathf.Pi / 2f;
+            // Draw as a thick arc by stacking thin DrawArc calls
+            DrawArc(center, edgeRadius, startAngle, startAngle + segAngle, 12, segColor, edgeWidth, true);
+        }
+
+        // Center gold ring inlay — 1px stroke at 80% radius, gold_light at 50% opacity
+        float ringRadius = radius * 0.80f;
+        DrawArc(center, ringRadius, 0f, Mathf.Tau, 32,
+            new Color(VisualLanguage.ColorGoldLight, 0.50f), 1f, true);
+    }
+
+    // -------------------------------------------------------------------------
+    // Label construction (created once in _Ready; not in _Draw)
+    // -------------------------------------------------------------------------
+
+    private void _BuildLabel(int diameter)
+    {
         _label = new Label();
         _label.Name = "DenomLabel";
         _label.Text = $"${Denomination}";
@@ -110,46 +133,18 @@ public partial class Chip : Control
     }
 
     // -------------------------------------------------------------------------
-    // State rendering
-    // -------------------------------------------------------------------------
-
-    private void _ApplyState(int diameter)
-    {
-        if (_glowRing == null || _body == null) return;
-
-        if (IsSelected)
-        {
-            // Selection glow: color_gold at ChipSelectionGlowOpacity (40%)
-            _glowRing.Color = new Color(VisualLanguage.ColorGold, VisualLanguage.ChipSelectionGlowOpacity);
-            _glowRing.Visible = true;
-        }
-        else if (_isHovered)
-        {
-            // Hover glow: color_gold at opacity_chip_hover_glow (20%)
-            _glowRing.Color = new Color(VisualLanguage.ColorGold, VisualLanguage.OpacityChipHoverGlow);
-            _glowRing.Visible = true;
-        }
-        else
-        {
-            _glowRing.Visible = false;
-        }
-    }
-
-    // -------------------------------------------------------------------------
-    // Hover callbacks
+    // Hover callbacks — queue redraw so glow updates
     // -------------------------------------------------------------------------
 
     private void _OnMouseEntered()
     {
         _isHovered = true;
-        int diameter = IsTraySize ? VisualLanguage.ChipDiameterTray : VisualLanguage.ChipDiameterStandard;
-        _ApplyState(diameter);
+        QueueRedraw();
     }
 
     private void _OnMouseExited()
     {
         _isHovered = false;
-        int diameter = IsTraySize ? VisualLanguage.ChipDiameterTray : VisualLanguage.ChipDiameterStandard;
-        _ApplyState(diameter);
+        QueueRedraw();
     }
 }

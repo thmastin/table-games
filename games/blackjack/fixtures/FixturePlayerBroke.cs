@@ -11,8 +11,9 @@ public partial class FixturePlayerBroke : FixtureBase
         AddBackground();
         AddTable();
         AddBankrollDisplay(amount: 0);
+        AddChipTray(selectedDenomination: 5);
 
-        // Last hand cards still visible under the overlay
+        // Last hand cards still visible under the overlay; zone center y=730 keeps cards within felt
         AddPlayerHand(
             ranks:   new[] { 10, 6 },
             suits:   new[] { "hearts", "spades" },
@@ -21,7 +22,7 @@ public partial class FixturePlayerBroke : FixtureBase
             isSoft:  false,
             isBust:  false,
             isActive: false,
-            center:  VisualLanguage.PosPlayerHandZoneCenter
+            center:  new Godot.Vector2(960, 730)
         );
 
         AddDealerHand(

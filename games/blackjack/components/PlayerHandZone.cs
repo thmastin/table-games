@@ -109,10 +109,9 @@ public partial class PlayerHandZone : Control
         }
 
         // Hand total badge — centered above the fan.
-        // Spec position: PosPlayerHandTotalBadge (960, 752).
-        // Formula: badgeCenterY = cardTop - Space6 (gap between card top and badge bottom edge).
-        // badgeCenterX = ZoneCenter.X (centered on zone, not offset).
-        // Use spec constant directly to match screen-states.md.
+        // Position: badge top = cardTop - Space6 (24px gap above card fan top).
+        // X: centered on ZoneCenter.X (follows each hand zone in split layout).
+        // ZIndex: must be above all cards (cards get ZIndex 0..count-1, badge gets count).
         _totalBadge = new HandTotalBadge();
         _totalBadge.Name = "HandTotalBadge";
         _totalBadge.Total        = HandTotal;
@@ -120,9 +119,15 @@ public partial class PlayerHandZone : Control
         _totalBadge.IsBust       = IsBust;
         _totalBadge.IsActiveHand = IsActiveHand;
 
-        float badgeCenterX = VisualLanguage.PosPlayerHandTotalBadge.X;
-        float badgeCenterY = VisualLanguage.PosPlayerHandTotalBadge.Y;
-        _totalBadge.Position = new Vector2(badgeCenterX, badgeCenterY);
+        // Badge center x = zone center x; shift left by half the badge min width (80px) for
+        // approximate centering until the label auto-sizes.
+        float badgeHalfW = 40f; // half of CustomMinimumSize.X = 80
+        float badgeCenterX = ZoneCenter.X - badgeHalfW;
+        // Badge sits above the card fan: badge top = cardTop - Space6
+        float badgeTopY = cardTop - VisualLanguage.Space6;
+        _totalBadge.Position = new Vector2(badgeCenterX, badgeTopY);
+        // Render above all cards
+        _totalBadge.ZIndex = count;
         AddChild(_totalBadge);
     }
 }

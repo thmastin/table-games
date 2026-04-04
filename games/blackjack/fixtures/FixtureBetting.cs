@@ -6,18 +6,28 @@
 /// </summary>
 public partial class FixtureBetting : FixtureBase
 {
-    public override void _Ready()
-    {
-        AddBackground();
-        AddTable();
-        AddBankrollDisplay(amount: 990);
-        AddBetZone(mainChips: new[] { 5, 5 }, isActive: true);
-        AddSideBetZone(triLuxActive: true, luckyLuckyActive: true);
+	public override void _Ready()
+	{
+		AddBackground();
+		AddTable();
+		AddBankrollDisplay(amount: 990);
+		AddChipTray(selectedDenomination: 5);
 
-        var actionBar = AddBettingActionBar(canDeal: true);
-        // Clear bet enabled when MainBet > 0 — set via CanClearBet prop
-        actionBar.ShowBettingActions = true;
-        actionBar.CanDeal = true;
-        actionBar.CanClearBet = true; // MainBet > 0 in this fixture
-    }
+		// BetZone with chips and bet total ($10 = 5+5)
+		var betZone = AddBetZone(mainChips: new[] { 5, 5 }, isActive: true);
+		betZone.BetTotal = 10;
+		betZone.Refresh();
+
+		AddSideBetZone(triLuxActive: true, luckyLuckyActive: true);
+
+		// Action bar: Deal and Clear both enabled (MainBet >= MinBet, MainBet > 0)
+		var actionBar = new BlackjackActionBar();
+		actionBar.Name = "ActionBar";
+		actionBar.ShowBettingActions = true;
+		actionBar.ShowGameActions = false;
+		actionBar.CanDeal = true;
+		actionBar.CanClearBet = true;
+		actionBar.ZIndex = 2;
+		AddChild(actionBar);
+	}
 }

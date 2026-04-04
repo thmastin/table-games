@@ -32,6 +32,9 @@ public partial class BlackjackBetZone : Control
     /// <summary>Chip denominations for the double-down bet stack (after double confirmed).</summary>
     [Export] public int[] DoubleDownChips { get; set; } = System.Array.Empty<int>();
 
+    /// <summary>Sum of all main bet chips. Displayed above the chip stack during Betting.</summary>
+    [Export] public int BetTotal { get; set; } = 0;
+
     // -------------------------------------------------------------------------
     // Child references
     // -------------------------------------------------------------------------
@@ -39,6 +42,7 @@ public partial class BlackjackBetZone : Control
     private BetSpot? _mainBetSpot;
     private Panel?   _doubleDownZone;
     private BetSpot? _doubleDownBetSpot;
+    private Label?   _betTotalLabel;
 
     // -------------------------------------------------------------------------
     // Godot lifecycle
@@ -120,6 +124,28 @@ public partial class BlackjackBetZone : Control
         _doubleDownZone.AddThemeStyleboxOverride("panel", ddStyle);
         AddChild(_doubleDownZone);
 
+        // Bet total label — Manrope Bold text_bet_display (42px), color_text_primary.
+        // Centered at (960, 648) per annotations.md Section 3 / screen-states.md State 2.
+        // Rendered above the chip stack; hidden when BetTotal == 0.
+        _betTotalLabel = new Label();
+        _betTotalLabel.Name = "BetTotalLabel";
+        _betTotalLabel.Text = BetTotal > 0 ? $"${BetTotal}" : "";
+        _betTotalLabel.AddThemeFontSizeOverride("font_size", VisualLanguage.TextBetDisplay);
+        _betTotalLabel.AddThemeColorOverride("font_color", VisualLanguage.ColorTextPrimary);
+        _betTotalLabel.HorizontalAlignment = HorizontalAlignment.Center;
+        _betTotalLabel.AutowrapMode = TextServer.AutowrapMode.Off;
+        // Width wide enough to contain the number; centered around x=960
+        int labelW = 200;
+        _betTotalLabel.Size = new Vector2(labelW, VisualLanguage.TextBetDisplay + VisualLanguage.Space4);
+        _betTotalLabel.Position = new Vector2(
+            VisualLanguage.PosBetTotalDisplay.X - labelW / 2f,
+            VisualLanguage.PosBetTotalDisplay.Y - (VisualLanguage.TextBetDisplay + VisualLanguage.Space4) / 2f
+        );
+        _betTotalLabel.MouseFilter = Control.MouseFilterEnum.Ignore;
+        _betTotalLabel.Visible = BetTotal > 0;
+        _betTotalLabel.ZIndex = 2;
+        AddChild(_betTotalLabel);
+
         // Double-down chip bet spot (when chips have been placed)
         _doubleDownBetSpot = new BetSpot();
         _doubleDownBetSpot.Name = "DoubleDownBetSpot";
@@ -140,8 +166,8 @@ public partial class BlackjackBetZone : Control
     {
         if (_mainBetSpot != null)
         {
-            _mainBetSpot.IsActive = IsMainBetActive;
-            _mainBetSpot.ChipDenominations = MainBetChips;
+            _mainBetSpot.SetActive(IsMainBetActive);
+            _mainBetSpot.SetChips(MainBetChips);
         }
 
         if (_doubleDownZone != null)
@@ -152,5 +178,20 @@ public partial class BlackjackBetZone : Control
             _doubleDownBetSpot.Visible = DoubleDownChips.Length > 0;
             _doubleDownBetSpot.ChipDenominations = DoubleDownChips;
         }
+
+        // Bet total label — compute from chips if BetTotal not explicitly set
+        if (_betTotalLabel != null)
+        {
+            int total = BetTotal > 0 ? BetTotal : _SumChips(MainBetChips);
+            _betTotalLabel.Text = total > 0 ? $"${total}" : "";
+            _betTotalLabel.Visible = total > 0;
+        }
+    }
+
+    private static int _SumChips(int[] chips)
+    {
+        int sum = 0;
+        foreach (var c in chips) sum += c;
+        return sum;
     }
 }

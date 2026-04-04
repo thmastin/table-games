@@ -13,8 +13,10 @@ public partial class FixturePlayerTurn : FixtureBase
         AddBackground();
         AddTable();
         AddBankrollDisplay(amount: 990);
+        AddChipTray(selectedDenomination: 5);
 
         // Player hand: 7♠ + 9♥ = 16 hard
+        // ZoneCenter.Y = 730 puts cardTop at 730-56=674, well within felt (200-760).
         AddPlayerHand(
             ranks:   new[] { 7, 9 },
             suits:   new[] { "spades", "hearts" },
@@ -23,7 +25,7 @@ public partial class FixturePlayerTurn : FixtureBase
             isSoft:  false,
             isBust:  false,
             isActive: true,
-            center:  VisualLanguage.PosPlayerHandZoneCenter
+            center:  new Godot.Vector2(960, 730)
         );
 
         // Dealer hand: K♣ (upcard) + face-down hole card
@@ -38,12 +40,14 @@ public partial class FixturePlayerTurn : FixtureBase
         );
 
         // Main bet with chips ($10 placed), show double-down ghost zone
-        AddBetZone(
+        var betZone = AddBetZone(
             mainChips:   new[] { 5, 5 },
             isActive:    false,
             showDouble:  true,
             doubleChips: System.Array.Empty<int>()
         );
+        betZone.BetTotal = 10;
+        betZone.Refresh();
         AddSideBetZone();
 
         AddPlayerTurnActionBar(

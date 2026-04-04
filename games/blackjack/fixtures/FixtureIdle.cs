@@ -11,6 +11,7 @@ public partial class FixtureIdle : FixtureBase
         AddBackground();
         AddTable();
         AddBankrollDisplay(amount: 1000);
+        AddChipTray(selectedDenomination: 5);
         AddBetZone(mainChips: System.Array.Empty<int>(), isActive: false);
         AddSideBetZone();
         AddBettingActionBar(canDeal: false);

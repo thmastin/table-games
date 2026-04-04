@@ -89,14 +89,14 @@ public partial class SideBetZone : Control
     {
         if (_triLux != null)
         {
-            _triLux.IsActive = IsTriLuxActive;
-            _triLux.ChipDenominations = TriLuxChips;
+            _triLux.SetActive(IsTriLuxActive);
+            _triLux.SetChips(TriLuxChips);
         }
 
         if (_luckyLucky != null)
         {
-            _luckyLucky.IsActive = IsLuckyLuckyActive;
-            _luckyLucky.ChipDenominations = LuckyLuckyChips;
+            _luckyLucky.SetActive(IsLuckyLuckyActive);
+            _luckyLucky.SetChips(LuckyLuckyChips);
         }
     }
 }

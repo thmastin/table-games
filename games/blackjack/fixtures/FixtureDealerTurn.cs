@@ -11,8 +11,9 @@ public partial class FixtureDealerTurn : FixtureBase
         AddBackground();
         AddTable();
         AddBankrollDisplay(amount: 990);
+        AddChipTray(selectedDenomination: 5);
 
-        // Player hand stood at 18: 9♠ + 9♣
+        // Player hand stood at 18: 9♠ + 9♣; zone center y=730 keeps cards within felt
         AddPlayerHand(
             ranks:   new[] { 9, 9 },
             suits:   new[] { "spades", "clubs" },
@@ -21,7 +22,7 @@ public partial class FixtureDealerTurn : FixtureBase
             isSoft:  false,
             isBust:  false,
             isActive: true,
-            center:  VisualLanguage.PosPlayerHandZoneCenter
+            center:  new Godot.Vector2(960, 730)
         );
 
         // Dealer hand: 6♦ upcard + 9♥ hole card (now revealed) = 15
@@ -35,7 +36,9 @@ public partial class FixtureDealerTurn : FixtureBase
             isBust:     false
         );
 
-        AddBetZone(mainChips: new[] { 5, 5 }, isActive: false);
+        var betZone = AddBetZone(mainChips: new[] { 5, 5 }, isActive: false);
+        betZone.BetTotal = 10;
+        betZone.Refresh();
         AddSideBetZone();
         // No action buttons during DealerTurn
     }

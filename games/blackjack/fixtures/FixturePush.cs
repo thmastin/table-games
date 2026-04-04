@@ -11,8 +11,9 @@ public partial class FixturePush : FixtureBase
         AddBackground();
         AddTable();
         AddBankrollDisplay(amount: 1000);
+        AddChipTray(selectedDenomination: 5);
 
-        // Player: 9♠ + 9♣ = 18
+        // Player: 9♠ + 9♣ = 18; zone center y=730 keeps cards within felt
         AddPlayerHand(
             ranks:   new[] { 9, 9 },
             suits:   new[] { "spades", "clubs" },
@@ -21,7 +22,7 @@ public partial class FixturePush : FixtureBase
             isSoft:  false,
             isBust:  false,
             isActive: true,
-            center:  VisualLanguage.PosPlayerHandZoneCenter
+            center:  new Godot.Vector2(960, 730)
         );
 
         // Dealer: 8♦ + 10♥ = 18
@@ -36,16 +37,27 @@ public partial class FixturePush : FixtureBase
         );
 
         // Chips stay in place on push
-        AddBetZone(mainChips: new[] { 5, 5 }, isActive: false);
+        var betZone = AddBetZone(mainChips: new[] { 5, 5 }, isActive: false);
+        betZone.BetTotal = 10;
+        betZone.Refresh();
         AddSideBetZone();
 
-        // ResultBanner — Push
+        // ResultBanner — Push; must call Play() to make the PUSH label visible.
+        // The banner positions itself at PosPushIndicator (960, 480) centered on the felt.
+        // SourcePosition is used as the push label's initial position.
         var banner = new ResultBanner();
         banner.Name = "ResultBanner";
         banner.Result = ResultBanner.ResultType.Push;
         banner.SourcePosition = VisualLanguage.PosPushIndicator;
         banner.TargetPosition = VisualLanguage.PosPushIndicator;
         banner.ZIndex = 3;
+        // Position the banner container at center of viewport so label appears at (960, 480)
+        banner.Position = Godot.Vector2.Zero;
+        banner.Size = new Godot.Vector2(VisualLanguage.ViewportWidth, VisualLanguage.ViewportHeight);
         AddChild(banner);
+
+        // Play() reveals the PUSH label and runs its animation.
+        // In a static fixture, this is appropriate — the viewer sees the push state.
+        banner.Play();
     }
 }
